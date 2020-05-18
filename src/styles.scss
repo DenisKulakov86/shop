@@ -1,1 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
+html,
+body {
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
+
+body {
+  margin-left: 50px;
+  font-size: 24px;
+  font-family: sans-serif;
+  padding-top: 1px;
+}
+
+a {
+  display: inline-block;
+  text-decoration: none;
+}
+button {
+  font-size: 24px;
+  & + button {
+    margin-left: 15px;
+  }
+}
