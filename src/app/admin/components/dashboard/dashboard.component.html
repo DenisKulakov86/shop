@@ -1,1 +1,52 @@
 <p>dashboard works!</p>
+<button (click)="addItem()">Добавить товар</button>
+<table>
+
+    <head></head>
+</table>
+<div class="overlay" [ngClass]="{active: isShowOverlay}" (click)="closePopup()">
+    <div class="popup" (click)="$event.stopPropagation()">
+        <div class="popup__headline">
+            <span class="popup__title">Редактировать товара</span>
+            <span class="popup__close" (click)="closePopup()"></span>
+        </div>
+        <div class="popup__content">
+            <form class="form" [formGroup]="form" (ngSubmit)="submit(form.value)">
+                <div class="form__wrap">
+                    <div class="field">
+                        <label>Название</label>
+                        <input type="text" placeholder="Название" formControlName="name">
+                    </div>
+                    <div class="field">
+                        <label>Цена</label>
+                        <input type="number" value='1' formControlName="price">
+                    </div>
+
+                    <fieldset class="field">
+                        <legend> <input type="checkbox">Размеры</legend>
+                        <ul>
+                            <li *ngFor="let size of sizeArr.controls; index as i ">
+                                <input type="checkbox" [formControl]="size"> <br>{{sizeName(i)}}
+                            </li>
+                        </ul>
+                    </fieldset>
+                    <fieldset class="field">
+                        <legend> <input type="checkbox">Цвета</legend>
+                        <ul>
+                            <li *ngFor="let color of colorArr.controls">
+                                <input type="checkbox" [formControl]="color"><br><span class="box"></span>
+                            </li>
+                        </ul>
+                    </fieldset>
+                </div>
+                <div class="form__wrap">
+                    <div class="field">
+                        <label>Изображение</label>
+                        <input type="file">
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">Сохранить</button>
+            </form>
+        </div>
+    </div>
+</div>
