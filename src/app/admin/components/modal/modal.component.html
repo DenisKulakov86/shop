@@ -1,0 +1,74 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="madal-title">{{title}}</h5>
+        <button type="button" class="close" aria-label="Close" (click)="activeModal.close('Close click')">
+            <span aria-hidden="true">x</span>
+        </button>
+    </div>
+    <form class="form" [formGroup]="form" (ngSubmit)="submit(form.value)">
+        <div class=" modal-body">
+            <div class="row">
+                <div class="col-12 col-lg-6 mb-3 mb-lg-0 ">
+                    <div class="form-group">
+                        <label for="name">Название</label>
+                        <input id="name" type="text" class="form-control" formControlName="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Цена</label>
+                        <input id='price' type="number" class="form-control" formControlName="price">
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Категория</label>
+                        <select id="category" class="form-control" formControlName="category">
+                            <option *ngFor="let cat of category; let i = index">
+                                <!-- [ngValue]="cat" -->
+                                {{cat}}
+                            </option>
+                        </select>
+
+                    </div>
+                    <fieldset>
+                        <legend>
+                            <div class="form-check form-check-inline">
+                                <input id="size" class="form-check-input" type="checkbox">
+                                <label for="size" class="form-check-label">Размер</label>
+                            </div>
+                        </legend>
+                        <div class="form-check form-check-inline" *ngFor="let size of sizeArr.controls; index as i">
+                            <input id="size{{i}}" type="checkbox" class="form-check-input" [formControl]="size">
+                            <label for="size{{i}" class="form-check-label">{{sizeName(i)}}</label>
+                        </div>
+                    </fieldset>
+                    <hr>
+                    <fieldset>
+                        <legend> 
+                            <div class=" form-check form-check-inline">
+                                <input id="color" class="form-check-input" type="checkbox">
+                                <label for="color" class="form-check-label">Цвета</label>
+                        </div>
+                        </legend>
+                        <div class="form-check form-check-inline" *ngFor="let color of colorArr.controls; index as i">
+                            <input id="color{{i}}" type="checkbox" class="form-check-input" [formControl]="color">
+                            <label for="color{{i}}" class="form-check-label">
+                                <span class="color-box" [style.background-color]="colorCode(i)"></span>
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="picture">Изображение</label>
+                        <input id="picture" type="file" class="form-control-file" (change)="loadImg($event)">
+                    </div>
+                    <div class="text-center">
+                        <img src="{{srcImg}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-dark">Отменить</button>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+    </form>
+</div>

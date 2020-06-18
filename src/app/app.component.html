@@ -1,11 +1,15 @@
-<div class="container">
+<div class="container-lg">
     <header class="header">
-        <h1>Распродажа одежды</h1>
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4">Распродажа одежды</h1>
+            </div>
+        </div>
     </header>
-    <section class="control">
-        <button routerLink='/admin'>admin</button>
-        <button routerLink='/shop'>shop</button>
-        <button routerLink='/404'>404</button>
-    </section>
+    <div class="btn-toolbar">
+        <button class="btn btn-primary" routerLink='/admin'>admin</button>
+        <button class="btn btn-primary ml-1" routerLink='/shop'>shop</button>
+        <button class="btn btn-primary ml-1" routerLink='/404'>404</button>
+    </div>
     <router-outlet></router-outlet>
 </div>

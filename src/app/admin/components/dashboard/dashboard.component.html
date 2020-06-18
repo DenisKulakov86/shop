@@ -1,51 +1,139 @@
 <p>dashboard works!</p>
-<button (click)="addItem()">Добавить товар</button>
+<button class="btn btn-primary" (click)="addItem()">Добавить товар</button>
+<button class="btn btn-primary ml-1" (click)="editItem()">Изменить</button>
+
+
 <table>
 
     <head></head>
 </table>
+
+
+
+
+<!-- <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="form-group">
+          <label for="dateOfBirth">Date of birth</label>
+          <div class="input-group">
+            <input id="dateOfBirth" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    </div>
+  </ng-template>
+  
+  <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Launch demo modal</button>
+  <hr>
+  <pre>{{ closeResult }}</pre>
+   -->
+
+
+
+<!-- <ng-template #content let-modal let-title>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="madal-title">{{title}}</h5>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">x</span>
+            </button>
+        </div>
+        <div class=" modal-body">
+            <form [formGroup]="form" (ngSubmit)="submit(form.value)">
+                <div class="col">
+
+                    <div class="form-group">
+                        <label for="name"></label>
+                        <input id="name" type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="price"></label>
+                        <input id='price' type="number" class="form-control">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-template> -->
+
+
 <div class="overlay" [ngClass]="{active: isShowOverlay}" (click)="closePopup()">
+
+
+
     <div class="popup" (click)="$event.stopPropagation()">
+
+
         <div class="popup__headline">
-            <span class="popup__title">Редактировать товара</span>
+            <!-- <span class="popup__title">{{title}}</span> -->
             <span class="popup__close" (click)="closePopup()"></span>
         </div>
         <div class="popup__content">
             <form class="form" [formGroup]="form" (ngSubmit)="submit(form.value)">
-                <div class="form__wrap">
+                <div class="form__col">
                     <div class="field">
-                        <label>Название</label>
+                        <label>Название:</label>
                         <input type="text" placeholder="Название" formControlName="name">
                     </div>
                     <div class="field">
-                        <label>Цена</label>
+                        <label>Цена:</label>
                         <input type="number" value='1' formControlName="price">
                     </div>
-
-                    <fieldset class="field">
-                        <legend> <input type="checkbox">Размеры</legend>
+                    <div class="field">
+                        <label>Категория</label>
+                        <select formControlName='category'>
+                            <option *ngFor="let cat of category">
+                                <!-- [ngValue]="cat" -->
+                                {{cat}}
+                            </option>
+                        </select>
+                    </div>
+                    <fieldset>
+                        <legend> <input type="checkbox">Размер</legend>
                         <ul>
-                            <li *ngFor="let size of sizeArr.controls; index as i ">
-                                <input type="checkbox" [formControl]="size"> <br>{{sizeName(i)}}
+                            <li *ngFor="let size of sizeArr.controls; index as i">
+                                <input id="size{{i}}" type="checkbox" [formControl]="size">
+                                <label for="size{{i}}">{{sizeName(i)}}</label>
                             </li>
                         </ul>
                     </fieldset>
-                    <fieldset class="field">
-                        <legend> <input type="checkbox">Цвета</legend>
+                    <fieldset>
+                        <legend> <input type="checkbox">Цвет</legend>
                         <ul>
-                            <li *ngFor="let color of colorArr.controls">
-                                <input type="checkbox" [formControl]="color"><br><span class="box"></span>
+                            <li *ngFor="let color of colorArr.controls; index as i">
+                                <input type="checkbox" [formControl]="color">
+                                <label for="color{{i}}">
+                                    <span class="pic-color" [style.background-color]="colorCode(i)"></span>
+                                </label>
                             </li>
                         </ul>
                     </fieldset>
                 </div>
-                <div class="form__wrap">
+                <div class="form__col">
                     <div class="field">
-                        <label>Изображение</label>
-                        <input type="file">
+                        <label>Изображение:</label><br>
+                        <input type="file" (change)="loadImg($event)">
+                    </div>
+                    <div class="form__img">
+                        <img src="{{srcImg}}">
                     </div>
                 </div>
-                <button type="submit" class="btn-submit">Сохранить</button>
+                <div class="form__action">
+                    <button type="submit" class="form__btn">Сохранить</button>
+                </div>
             </form>
         </div>
     </div>

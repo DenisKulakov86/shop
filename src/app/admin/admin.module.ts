@@ -7,9 +7,22 @@ import { AdminRoutingModule } from './admin-routing.module';
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { OrdersComponent } from './components/orders/orders.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ModalComponent } from './components/modal/modal.component';
 
 @NgModule({
-  declarations: [AdminComponent, DashboardComponent, OrdersComponent],
-  imports: [CommonModule, AdminRoutingModule, ReactiveFormsModule, FormsModule],
+  declarations: [
+    AdminComponent,
+    DashboardComponent,
+    OrdersComponent,
+    ModalComponent,
+  ],
+  imports: [
+    CommonModule,
+    AdminRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,
+    NgbModule,
+  ],
 })
 export class AdminModule {}

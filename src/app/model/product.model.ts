@@ -1,8 +1,9 @@
 export class Product {
   name: string;
   price: number;
-  sizes: { [key: string]: boolean };
-  colors: { [key: string]: boolean };
+  size: { [key: string]: boolean };
+  color: { [key: string]: boolean };
+  category:string;
   img?: string;
   desc?: string;
   id?: number;

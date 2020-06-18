@@ -1,0 +1,13 @@
+.color-box {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #000;
+}
+img {
+  display: inline-block;
+  max-width: 280px;
+  max-height: 280px;
+  object-fit: contain;
+  object-position: center;
+}
