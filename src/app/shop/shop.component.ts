@@ -7,12 +7,10 @@ import { ShopService } from '../service/shop.service';
   styleUrls: ['./shop.component.scss']
 })
 export class ShopComponent implements OnInit {
-  title
 
   constructor(private shopService: ShopService) { }
 
   ngOnInit(): void {
-    this.title = this.shopService.title;
   }
 
 }

@@ -24,7 +24,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   category = category;
   prod: Product;
   sub: Subscription;
-  srcImg: string ="";
+  srcImg: string = '';
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -36,18 +36,17 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       price: [0, [Validators.min(1)]],
+      number: [1, Validators.min(1)],
       size: this.fb.array([]),
       color: this.fb.array([]),
       category: [this.category[0]],
-      img: '',
     });
 
-    this.sub = this.adminServicve.curProd
-      .pipe(tap(console.log))
-      .subscribe((p) => {
-        this.prod = p;
-        this.patchForm(p);
-      });
+    this.sub = this.adminServicve.curProd.subscribe((p) => {
+      this.prod = p;
+      this.srcImg = p.img;
+      this.patchForm(p);
+    });
   }
   ngOnDestroy() {
     this.sub.unsubscribe();
@@ -69,7 +68,6 @@ export class ModalComponent implements OnInit, OnDestroy {
 
     reader.readAsDataURL(file);
     reader.onload = () => {
-      console.log(reader.result);
       this.srcImg = <string>reader.result;
     };
   }
@@ -79,6 +77,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.form.get('name').setValue(product.name);
     this.form.get('price').setValue(product.price);
     this.form.get('category').setValue(product.category);
+    this.form.get('number').setValue(product.number);
 
     this.sizeArr.clear();
     arr = this.buildArr(product.size);
@@ -93,7 +92,21 @@ export class ModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  submit(value) {}
+  submit(value) {
+    function filler(obj: Object, val: []) {
+      return Object.keys(obj).reduce((acc, key, i) => {
+        acc[key] = val[i];
+        return acc;
+      }, {});
+    }
+    const formValue = Object.assign({}, value, {
+      size: filler(this.prod.size, value.size),
+      color: filler(this.prod.color, value.color),
+      img: this.srcImg,
+    });
+
+    this.activeModal.close(formValue);
+  }
 
   get sizeArr(): FormArray {
     return this.form.get('size') as FormArray;

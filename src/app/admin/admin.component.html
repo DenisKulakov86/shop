@@ -1,7 +1,10 @@
-<p>admin wors!</p>
-<p>{{title}}</p>
-<p>
-    <a routerLink='/admin/dashboard'>admin</a>
-    <a routerLink='/admin/orders'>orders</a>
-</p>
+
+<ul ngbNav class="nav-tabs mb-4">
+    <li ngbNavItem>
+        <a ngbNavLink routerLink='/admin/dashboard'>Админка</a>  
+    </li>
+    <li ngbNavItem>
+        <a ngbNavLink routerLink='/admin/orders'>Заказы</a>
+    </li>
+</ul>
 <router-outlet></router-outlet>

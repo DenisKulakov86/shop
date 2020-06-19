@@ -12,7 +12,6 @@ export class AdminComponent implements OnInit {
   constructor(private adminService: AdminService) { }
 
   ngOnInit(): void {
-    this.title = this.adminService.title;
   }
 
 }
