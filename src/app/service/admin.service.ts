@@ -12,10 +12,10 @@ export const newProduct: Product = {
   number: 1,
   category: 'Майки',
   color: {
-    '#000': true,
-    '#fff': false,
-    '#C81212': true,
-    '#156207': true,
+    '000': true,
+    fff: false,
+    C81212: true,
+    '156207': true,
   },
   size: {
     '12': false,
@@ -24,6 +24,7 @@ export const newProduct: Product = {
     '48': false,
     '52': false,
   },
+  img: '',
 };
 
 @Injectable({
@@ -55,7 +56,9 @@ export class AdminService {
   }
 
   add(prod: Product) {
-    this.ref.push(prod);
+    console.log(prod);
+
+    this.ref.push(prod).then((res) => this.log('add', res));
     //let prods = this._prods.getValue();
     //prod.id = Math.max(...prods.map((p) => p.id), 0) + 1;
     //prods.push(prod);
@@ -74,14 +77,14 @@ export class AdminService {
   }
   load(): Observable<Product[]> {
     this._prods.next([]);
-    return this.ref
-      .snapshotChanges()
-      .pipe(
-        map((change) => change.map((c) => ({ ...c.payload.val(), id: c.key })))
-      );
+    return this.ref.snapshotChanges().pipe(
+      map((change) => change.map((c) => ({ ...c.payload.val(), id: c.key }))),
+      tap((res) => this.log('load', res))
+      //   .tap((res) => console.log(res))
+    );
   }
 
-  log(msg) {
-    console.log(`Admin Service: ${msg}`);
+  log(operation = 'operatioin', val = null) {
+    console.log(`Admin Service: ${operation}`, val);
   }
 }
