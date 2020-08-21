@@ -4,14 +4,12 @@ import { AdminService } from '../service/admin.service';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss']
+  styleUrls: ['./admin.component.scss'],
 })
 export class AdminComponent implements OnInit {
-  title
+  title;
 
-  constructor(private adminService: AdminService) { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

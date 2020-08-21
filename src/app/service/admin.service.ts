@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Product } from '../model/product.model';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { Observable, BehaviorSubject, iif, of } from 'rxjs';
+import { tap, map, take } from 'rxjs/operators';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+import { DataBaseService } from './database.service';
 
 export const category = ['Майки', 'Футболки', 'Бриджи', 'Спорт'];
 
@@ -11,77 +12,62 @@ export const newProduct: Product = {
   price: 0,
   number: 1,
   category: 'Майки',
-  color: {
-    '000': true,
-    fff: false,
-    C81212: true,
-    '156207': true,
-  },
   size: {
-    '12': false,
-    '24': true,
-    '32': false,
-    '48': false,
-    '52': false,
+    '12': 10,
+    '24': 20,
+    '32': 30,
+    '48': 40,
+    '52': 50,
   },
   img: '',
 };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class AdminService {
   ref: AngularFireList<Product>;
-  private _prods: BehaviorSubject<Product[]> = new BehaviorSubject([]);
-  private _curProd: BehaviorSubject<Product> = new BehaviorSubject(newProduct);
 
-  get curProd() {
-    return this._curProd.asObservable();
-  }
-  get prods(): Observable<Product[]> {
-    return this._prods.asObservable().pipe(tap(console.log));
+  constructor(private db: DataBaseService) {
+    db.init('products');
   }
 
-  constructor(private db: AngularFireDatabase) {
-    this.ref = db.list<Product>('products');
-  }
-
-  create() {
-    this._curProd.next(newProduct);
-  }
-  edit(id) {
-    const prods = this._prods.getValue();
-    let finded = prods.find((p) => p.id == id);
-    if (finded) this._curProd.next(finded);
+  print() {
+    this.db.print();
   }
 
   add(prod: Product) {
-    console.log(prod);
-
-    this.ref.push(prod).then((res) => this.log('add', res));
-    //let prods = this._prods.getValue();
-    //prod.id = Math.max(...prods.map((p) => p.id), 0) + 1;
-    //prods.push(prod);
-    //this._prods.next(prods);
-    //console.log(prods);
+    return this.db.addItem(prod).then((res) => {
+      this.log('ADD', res);
+      return res;
+    });
   }
 
-  update(id, prod: Product) {
-    this.ref.update(id, prod);
-    // let prods = this._prods.getValue();
-    // let ind = prods.findIndex((p) => p.id === id);
-    // if (~ind) {
-    //   prods[ind] = { ...prod, id };
-    //   this._prods.next(prods);
-    // }
+  update(id: string, prod: Product) {
+    return this.db.updateItem(id, prod).then((res) => {
+      this.log('UPD', res);
+      return res;
+    });
   }
-  load(): Observable<Product[]> {
-    this._prods.next([]);
-    return this.ref.snapshotChanges().pipe(
-      map((change) => change.map((c) => ({ ...c.payload.val(), id: c.key }))),
-      tap((res) => this.log('load', res))
-      //   .tap((res) => console.log(res))
+
+  delete(key?: any) {
+    return this.db.deleteItem(key).then((res) => {
+      this.log('DEL', key);
+      return res;
+    });
+  }
+
+  getProdByID(id: any) {
+    return iif(
+      () => id,
+      this.load().pipe(
+        map((prods) => prods.find((p) => p.id === id)),
+        take(1)
+      ),
+      of(newProduct)
     );
+  }
+
+  load(): Observable<Product[]> {
+    return this.db.getItems<Product>().pipe(tap((res) => this.log('GET', res)));
   }
 
   log(operation = 'operatioin', val = null) {

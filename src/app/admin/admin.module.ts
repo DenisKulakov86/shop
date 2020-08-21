@@ -23,5 +23,6 @@ import { ModalComponent } from './components/modal/modal.component';
     FormsModule,
     NgbModule,
   ],
+  providers:[]
 })
 export class AdminModule {}

@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
+import { DataBaseService } from './database.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ShopService {
-  constructor() { }
+  constructor(private fdb: DataBaseService) {
+    fdb.init('shop');
+  }
+  print() {
+    this.fdb.print();
+  }
 }

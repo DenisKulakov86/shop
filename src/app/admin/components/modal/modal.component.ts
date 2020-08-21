@@ -5,6 +5,8 @@ import {
   OnChanges,
   AfterViewInit,
   OnDestroy,
+  AfterContentInit,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
@@ -17,47 +19,48 @@ import { tap } from 'rxjs/operators';
   selector: 'app-modal',
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalComponent implements OnInit, OnDestroy {
+export class ModalComponent implements OnInit, AfterContentInit {
   @Input() title: string;
+  @Input() id: any;
   form: FormGroup;
   category = category;
-  prod: Product;
-  sub: Subscription;
+  prod: Product = null;
   srcImg: string = '';
 
   constructor(
     public activeModal: NgbActiveModal,
-    private adminServicve: AdminService,
+    // private adminServicve: AdminService,
     private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
+    // this.adminServicve.print();
+
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       price: [0, [Validators.min(1)]],
       number: [1, Validators.min(1)],
       size: this.fb.array([]),
+      //number: this.fb.array([]),
       color: this.fb.array([]),
       category: [this.category[0]],
     });
-
-    this.sub = this.adminServicve.curProd.subscribe((p) => {
-      this.prod = p;
-      this.srcImg = p.img;
-      this.patchForm(p);
-    });
+    let group = this.fb.group({
+      
+    })
   }
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+
+  ngAfterContentInit() {
+    this.srcImg = this.prod.img;
+    this.patchForm(this.prod);
   }
 
   sizeName(i) {
     return Object.keys(this.prod.size)[i];
   }
-  colorCode(i) {
-    return Object.keys(this.prod.color)[i];
-  }
+ 
 
   loadImg(ev: Event) {
     let input = ev.target as HTMLInputElement;
@@ -84,12 +87,6 @@ export class ModalComponent implements OnInit, OnDestroy {
     for (let i = 0; i < arr.length; i++) {
       this.sizeArr.push(arr.at(i));
     }
-
-    this.colorArr.clear();
-    arr = this.buildArr(product.color);
-    for (let i = 0; i < arr.length; i++) {
-      this.colorArr.push(arr.at(i));
-    }
   }
 
   submit(value) {
@@ -101,7 +98,6 @@ export class ModalComponent implements OnInit, OnDestroy {
     }
     const formValue = Object.assign({}, value, {
       size: filler(this.prod.size, value.size),
-      color: filler(this.prod.color, value.color),
       img: this.srcImg,
     });
 
@@ -111,12 +107,22 @@ export class ModalComponent implements OnInit, OnDestroy {
   get sizeArr(): FormArray {
     return this.form.get('size') as FormArray;
   }
-  get colorArr(): FormArray {
-    return this.form.get('color') as FormArray;
-  }
 
   buildArr(obj: Object) {
-    const arr = Object.keys(obj).map((k) => this.fb.control(obj[k]));
+    const arr = Object.keys(obj).map((k) => this.fb.control(obj[k] ? true: false));
     return this.fb.array(arr);
+  }
+
+  isSomeSelectedSize() {
+    console.log( (this.form.value['size'] as Array<boolean>).length);
+    return (this.form.value['size'] as Array<boolean>).some((v) => v === true);
+  }
+  isAllSelectedSize() {
+    return (this.form.value['size'] as Array<boolean>).every((v) => v === true);
+  }
+  masterToggle() {
+    this.isAllSelectedSize()
+      ? this.sizeArr.reset()
+      : this.sizeArr.controls.forEach((cntrl) => cntrl.setValue(true));
   }
 }

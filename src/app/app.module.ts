@@ -10,10 +10,12 @@ import { environment } from 'src/environments/environment';
 import { AngularFireModule } from "@angular/fire";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent, NotfoundComponent],
   imports: [
+    CommonModule,
     BrowserModule,
     AppRoutingModule,
     NgbModule,

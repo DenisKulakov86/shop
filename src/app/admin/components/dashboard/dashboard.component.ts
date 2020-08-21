@@ -1,4 +1,11 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  OnDestroy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -14,16 +21,20 @@ import {
   NgbModalRef,
 } from '@ng-bootstrap/ng-bootstrap';
 import { ModalComponent } from '../modal/modal.component';
-import { AdminService } from 'src/app/service/admin.service';
-import { Observable } from 'rxjs';
+import { AdminService, newProduct } from 'src/app/service/admin.service';
+import { Observable, Subscribable, Subscription } from 'rxjs';
+import { DataBaseService } from 'src/app/service/database.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
+  providers: [AdminService, DataBaseService],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   $prods: Observable<Product[]>;
+  prods: Product[];
+  sub: Subscription;
 
   constructor(
     private modalService: NgbModal,
@@ -31,28 +42,40 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.$prods = this.adminService.load();
+    this.adminService.print();
+    this.sub = this.adminService
+      .load()
+      .subscribe((prods) => (this.prods = prods));
+  }
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   create() {
-    this.adminService.create();
-    const modalRef = this.modalService.open(ModalComponent, { size: 'lg' });
-    modalRef.componentInstance.title = 'Новый товар';
-    modalRef.result.then(
+    this.openModal('Новый товар', null).then(
       (prod) => this.adminService.add(prod as Product),
-      (val) => console.log(val)
+      (reject) => console.log(reject)
     );
-    // this.openPopup();
   }
   edit(id) {
-    this.adminService.edit(id);
-    const modalRef = this.modalService.open(ModalComponent, { size: 'lg' });
-    modalRef.componentInstance.title = `Редактировать товар ${id}`;
-
-    modalRef.result.then(
+    this.openModal(`Редактировать товар ${id}`, id).then(
       (edited) => this.adminService.update(id, edited),
       (reject) => console.log(reject)
     );
-    // this.openPopup();
+  }
+  openModal(title, id) {
+    const modalRef = this.modalService.open(ModalComponent, { size: 'lg' });
+    modalRef.componentInstance.title = title;
+    modalRef.componentInstance.prod = id
+      ? this.prods.find((p) => p.id === id)
+      : newProduct;
+    return modalRef.result;
+  }
+
+  delete(id) {
+    this.adminService.delete(id);
+  }
+  delBranch() {
+    this.adminService.delete();
   }
 }
