@@ -1,28 +1,59 @@
 <!-- <button class="btn btn-primary mr-1 " (click)="edit()">Изменить</button> -->
-<button class="btn btn-primary" (click)="create()">Добавить товар</button>
-<button class="btn btn-warning ml-3" (click)="delBranch()"> Удалить ветку</button>
 
 
-<table *ngIf="prods" class="table table-hover mt-3">
-    <thead class="thead-light">
-        <th>&#8470;</th>
-        <th>Название</th>
-        <th>Категория</th>
-        <th>Кол-во</th>
-        <th>Цена</th>
-        <th></th>
-    </thead>
-    <tbody>
-        <tr *ngFor="let prod of prods; index as i" (click)="edit(prod.id)">
-            <th>{{i + 1}}</th>
-            <td>
-                <img class="thumb" src="{{prod.img}}">
-                {{prod.name}}
-            </td>
-            <td>{{prod.category}}</td>
-            <td>{{prod.number}}</td>
-            <td>{{prod.price}}</td>
-            <td><button class="btn btn-warning" (click)="$event.stopPropagation();delete(prod.id)">Удалить</button></td>
-        </tr>
-    </tbody>
-</table>
+
+<div class="form-group">
+	<button class="btn btn-primary" (click)="create()">Добавить товар</button>
+	<button class="btn btn-danger ml-3" (click)="delBranch()"> Удалить ветку</button>
+</div>
+
+<div class="w-100 overflow-auto ">
+
+	<div class="form-inline py-1">
+
+		<div class="form-group col-12 col-sm-6 row">
+			<label class="col-form-label mr-3" for="category">Категория</label>
+
+			<select class="form-control" id="category" [formControl]="categoryControl">
+				<option value="">Все</option>
+				<option *ngFor="let cat of category; index as i;" [selected]="categoryControl.value == cat" >{{cat}}</option>
+			</select>
+		</div>
+		<div class="form-group col-6 row">
+
+			<button class=" btn btn-primary mx-1" type="button" (click)="setLimit(-1)">
+				-
+			</button>
+			<input class="w-25 d-inline-block form-control" [ngModel]="limit" (ngModelChange)="ps.setLimit($event)" type="number" min="1" />
+			<button class="btn btn-primary mx-1 " type="button" (click)="setLimit(1)">
+				+
+			</button>
+		</div>
+	</div>
+
+
+	<table class="table table-hover mt-3">
+		<thead class="thead-light">
+			<th>&#8470;</th>
+			<th>Название</th>
+			<th>Категория</th>
+			<th class="text-nowrap">Кол-во</th>
+			<th>Цена</th>
+			<th></th>
+		</thead>
+		<tbody>
+			<tr *ngFor="let prod of products$ | async; index as i" (click)="edit(prod.key)">
+				<th>{{i + 1}}</th>
+				<td class="text-center">
+					<img class="thumb" src="{{prod.img}}">
+					{{prod.name}}
+				</td>
+				<td>{{prod.category}}</td>
+				<td>{{getNumber(prod)}}</td>
+				<td>{{prod.price}}</td>
+				<td><button class="btn btn-danger" (click)="$event.stopPropagation();delete(prod.key)">Удалить</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

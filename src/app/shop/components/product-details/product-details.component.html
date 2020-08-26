@@ -1,0 +1,37 @@
+<div *ngIf="product" class="row mt-4 pt-4">
+	<div class="col-12 col-lg-8">
+		<img class="product-img img-thumbnail" src="{{product.img}}" alt="">
+	</div>
+	<div class="col-12 col-lg-4">
+		<div class="details">
+			Цена: <span
+				class=" price font-weight-bold">{{product.price | currency:"RUB":"symbol-narrow":"1.0-2"}}</span>
+		</div>
+		<form [formGroup]="form" (ngSubmit)="submit(form.value)">
+
+			<div class="form-group">
+				<label for="num">Выберите количество</label>
+				<input id="num" class="form-control" formControlName="num" type="number">
+
+			</div>
+			<div class="form-group">
+				<label for="size">Выберите размер</label>
+				<select id="size" class="form-control" formControlName="size">
+					<option value=""></option>
+					<option *ngFor="let size of sizes">{{size}}</option>
+					<!-- <option *ngFor="let size of sizes" [ngValue]="size.c">{{size.n}}</option> -->
+				</select>
+			</div>
+			<div *ngIf="form.get('size').invalid && (form.dirty || form.touched)" class="mt-2 alert alert-danger"
+				role="alert">
+				Выберите размер
+			</div>
+			<button [disabled]="form.invalid && (form.dirty || form.touched)" type="submit"
+				class=" w-100 btn btn-primary">Добавить в корзину</button>
+			<div *ngIf="form.errors" class="mt-2 alert alert-danger" role="alert">
+				{{getError()}}
+			</div>
+
+		</form>
+	</div>
+</div>

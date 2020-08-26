@@ -1,67 +1,66 @@
 <div class="modal-content">
-    <div class="modal-header">
-        <h5 class="madal-title">{{title}}</h5>
-        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss(0)">
-            <span aria-hidden="true">x</span>
-        </button>
-    </div>
-    <form class="form" [formGroup]="form" (ngSubmit)="submit(form.value)">
-        <div class=" modal-body">
-            <div class="row">
-                <div class="col-12 col-lg-6 mb-3 mb-lg-0 ">
-                    <div class="form-group">
-                        <label for="name">Название</label>
-                        <input id="name" type="text" class="form-control" formControlName="name">
-                    </div>
-                    <div class="form-group">
-                        <label for="price">Цена</label>
-                        <input type="number" class="form-control" min="0" step="100" formControlName="price">
-                    </div>
-                    <div class="form-group">
-                        <label for="price">Количество</label>
-                        <input id='price' type="number" class="form-control" min="1" formControlName="number">
-                    </div>
-                    <div class="form-group">
-                        <label for="category">Категория</label>
-                        <select id="category" class="form-control" formControlName="category">
-                            <option *ngFor="let cat of category; let i = index" [selected]="prod?.category == cat">
-                                <!-- [ngValue]="cat" -->
-                                {{cat}}
-                            </option>
-                        </select>
+	<div class="modal-header">
+		<h5 class="madal-title">{{title}}</h5>
+		<button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss(0)">
+			<span aria-hidden="true">x</span>
+		</button>
+	</div>
+	<form class="form" [formGroup]="form" *ngIf="(product$ | async) as product" [conectForm]="product"
+		(ngSubmit)="submit(form.value)">
+		<div class=" modal-body">
+			<div class="form-row">
+				<div class="col-12 mb-3 col-lg-6 mb-lg-0 ">
+					<div class="form-group">
+						<label for="name">Название</label>
+						<input id="name" type="text" class="form-control" formControlName="name">
+					</div>
+					<div class="form-group mw-50">
+						<label for="price">Цена</label>
+						<app-counter [formGroup]="form" fcn="price" id="price" step="100" min='1'></app-counter>
+					</div>
+					<div class="form-group">
+						<label for="category">Категория</label>
+						<select id="category" class="form-control" formControlName="category">
+							<option *ngFor="let cat of category; let i = index" [selected]="product?.category == cat">
+								<!-- [ngValue]="cat" -->
+								{{cat}}
+							</option>
+						</select>
+					</div>
+					<fieldset>
+						<legend>
+							<label for="size" class="form-check-label">Размер</label>
+						</legend>
+						<div class="form-row" formGroupName="size">
+							<ng-container *ngFor="let ctrSizeName of ctrSizeNameArr">
+								<div class="form-group col-6 form-row">
+									<label class="col-2 col-form-label"
+										for="size{{ctrSizeName}}">{{ctrSizeName}}:</label>
+									<app-counter class="col-10" [formGroup]="form.get('size')" [fcn]="ctrSizeName"
+										id="size{{ctrSizeName}}" step="1" min='0'>
+									</app-counter>
+								</div>
+							</ng-container>
+						</div>
+					</fieldset>
 
-                    </div>
-                    <fieldset>
-                        <legend>
-                            <div class="custom-control custom-checkbox">
-                                <input  id="size" class="custom-control-input" type="checkbox" (change)="masterToggle()"
-                                    [checked]="isSomeSelectedSize() && isAllSelectedSize()"
-                                    [indeterminate]="isSomeSelectedSize() && !isAllSelectedSize()">
-                                <label for="size" class="custom-control-label">Размер</label>
-                                {{isAllSelectedSize()}} {{isSomeSelectedSize()}}
-                            </div>
-                        </legend>
-                        <div class="form-check" *ngFor="let size of sizeArr.controls; index as i">
-                            <input id="size{{i}}" type="checkbox" class="form-check-input" [formControl]="size">
-                            <label for="size{{i}}" class="form-check-label">{{sizeName(i)}}</label>
-                        </div>
-                    </fieldset>
-            
-                </div>
-                <div class="col">
-                    <div class="form-group">
-                        <label for="picture">Изображение</label>
-                        <input id="picture" type="file" class="form-control-file" (change)="loadImg($event)">
-                    </div>
-                    <div class="text-center">
-                        <img src="{{srcImg}}">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-dark" (click)="activeModal.dismiss(0)">Отменить</button>
-            <button type="submit" class="btn btn-primary" ngbAutofocus>Сохранить</button>
-        </div>
-    </form>
+				</div>
+				<div class="col">
+					<file-upload formControlName="img"></file-upload>
+					<div *ngIf="form.get('img').invalid && (form.dirty || form.touched)" class="mt-2 alert alert-danger"
+						role="alert">
+						Выберите фото
+					</div>
+					<div class="  text-center">
+						<img src="{{form.get('img').value}}">
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="modal-footer">
+		<button type="submit" ngbAutofocus class="btn btn-dark" (click)="activeModal.dismiss(0)">Отменить</button>
+		<button type="submit" (click)="submit(form.value)" [disabled]="form.invalid && form.touched"
+			class="btn btn-primary" ngbAutofocus>Сохранить</button>
+	</div>
 </div>

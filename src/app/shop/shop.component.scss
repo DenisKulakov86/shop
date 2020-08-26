@@ -1,5 +1,18 @@
 @media (max-width: 380px) {
     .display-4 {
-      font-size: 3rem;
+        font-size: 3rem;
     }
-  }
+}
+
+.card-list {
+	display: flex;
+	flex-wrap: wrap;
+	margin-left: -15px;
+
+    &__item {
+		min-width: 160px;
+		margin-left: 15px;
+		flex: 1 1 calc(33.3333% - 15px);
+
+	}
+}

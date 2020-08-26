@@ -1,0 +1,13 @@
+<div *ngIf="product" class="card mb-3">
+	<div class="card-img-top overflow-hidden">
+		<img ondragstart="return false;" src="{{product.img}}" alt="img product">
+	</div>
+	<div class="card-body">
+		<div class="d-flex flex-wrap mb-3">
+			<span *ngFor="let size of sizes" class="badge font-weight-light"
+				[class.text-muted]="size.muted">{{size.value}}</span>
+		</div>
+		<div>{{product.category}}</div>
+		<div class=" font-weight-bold">{{product.price | currency:"RUB":"symbol-narrow"}}</div>
+	</div>
+</div>

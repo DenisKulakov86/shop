@@ -5,6 +5,8 @@ import {
   TemplateRef,
   OnDestroy,
   ChangeDetectorRef,
+  AfterViewInit,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -12,8 +14,10 @@ import {
   Validators,
   FormArray,
   AbstractControl,
+  FormControl,
+  NgForm,
 } from '@angular/forms';
-import { Product } from 'src/app/model/product.model';
+import { Product, category, newProduct } from 'src/app/model/product.model';
 
 import {
   NgbModal,
@@ -21,61 +25,76 @@ import {
   NgbModalRef,
 } from '@ng-bootstrap/ng-bootstrap';
 import { ModalComponent } from '../modal/modal.component';
-import { AdminService, newProduct } from 'src/app/service/admin.service';
-import { Observable, Subscribable, Subscription } from 'rxjs';
+import { Observable, Subscribable, Subscription, of } from 'rxjs';
 import { DataBaseService } from 'src/app/service/database.service';
+import { take, delay, map } from 'rxjs/operators';
+import { isNumber } from 'util';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  providers: [AdminService, DataBaseService],
+  providers: [DataBaseService],
+  //   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  $prods: Observable<Product[]>;
-  prods: Product[];
-  sub: Subscription;
+  products$: Observable<Product[]>;
+  category = category;
+  categoryControl: FormControl;
+  limit: number;
 
   constructor(
     private modalService: NgbModal,
-    private adminService: AdminService
-  ) {}
+    public ps: DataBaseService<Product>
+  ) {
+    ps.init({ path: 'products', orderBy: 'category', limit: 10 });
+  }
+  setLimit(val: number) {
+    this.limit += val;
+    if (!this.limit) this.limit = 1;
+    this.ps.setLimit(this.limit);
+  }
 
+  getNumber(p: Product) {
+    return Object.entries(p.size).reduce((sum, [, val]) => (sum += val), 0);
+  }
   ngOnInit(): void {
-    this.adminService.print();
-    this.sub = this.adminService
-      .load()
-      .subscribe((prods) => (this.prods = prods));
+    this.categoryControl = new FormControl(this.ps.orderByValue);
+
+    this.limit = this.ps.limit;
+    this.categoryControl.valueChanges.subscribe((cat) => {
+      this.ps.setFilter(cat);
+    });
+    this.products$ = this.ps.list();
   }
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
+
+  ngOnDestroy() {}
 
   create() {
     this.openModal('Новый товар', null).then(
-      (prod) => this.adminService.add(prod as Product),
+      (prod) => this.ps.add(prod as Product),
       (reject) => console.log(reject)
     );
   }
-  edit(id) {
-    this.openModal(`Редактировать товар ${id}`, id).then(
-      (edited) => this.adminService.update(id, edited),
+  edit(key) {
+    this.openModal(`Редактировать товар ${key}`, key).then(
+      (edited) => this.ps.update(key, edited),
       (reject) => console.log(reject)
     );
   }
-  openModal(title, id) {
+  openModal(title, key) {
     const modalRef = this.modalService.open(ModalComponent, { size: 'lg' });
-    modalRef.componentInstance.title = title;
-    modalRef.componentInstance.prod = id
-      ? this.prods.find((p) => p.id === id)
-      : newProduct;
+    (<ModalComponent>modalRef.componentInstance).title = title;
+    (<ModalComponent>modalRef.componentInstance).product$ = this.ps
+      .get(key)
+      .pipe(map((p) => (p ? p : newProduct)));
     return modalRef.result;
   }
 
   delete(id) {
-    this.adminService.delete(id);
+    this.ps.delete(id);
   }
   delBranch() {
-    this.adminService.delete();
+    this.ps.delete();
   }
 }

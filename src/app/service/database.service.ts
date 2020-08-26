@@ -4,7 +4,13 @@ import {
   AngularFireList,
   PathReference,
 } from '@angular/fire/database';
-import { Observable, Subject, from } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  from,
+  BehaviorSubject,
+  combineLatest,
+} from 'rxjs';
 import {
   map,
   switchMap,
@@ -17,39 +23,73 @@ import {
   refCount,
   finalize,
 } from 'rxjs/operators';
+import DataBase from './batabase.interface';
 
 @Injectable()
-export class DataBaseService {
-  private _ref: AngularFireList<any>;
-  private key: string;
-  constructor(private rtdb: AngularFireDatabase) {}
-
-  init<T>(key) {
-    this.key = key;
-    this._ref = this.rtdb.list<T>(key);
+export class DataBaseService<T> {
+  private _limit$: BehaviorSubject<number> = new BehaviorSubject(10);
+  private _orderByValue$: BehaviorSubject<string> = new BehaviorSubject('');
+  private _path = '';
+  private _orderBy = '';
+  private _ref: AngularFireList<T>;
+  get limit() {
+    return this._limit$.value;
   }
-  print() {
-    console.log(`Init ${this.key.toLocaleUpperCase()}\n\r`);
+  get orderByValue() {
+    return this._orderByValue$.value;
   }
 
-  getItems<T>(): Observable<T[]> {
-    return this._ref.snapshotChanges().pipe(
-      map((change) =>
-        change.map<T>((c) => ({ ...c.payload.val(), id: c.key }))
-      ),
-      shareReplay(1)
+  constructor(private rtdb: AngularFireDatabase) {
+    console.log('INIT DataBase Service'.toLocaleUpperCase());
+  }
+  init({ path, orderBy = '', limit = 10 }) {
+    this._orderBy = orderBy;
+    this._path = path;
+    this._ref = this.rtdb.list<T>(path);
+    this._limit$.next(limit);
+  }
+  list() {
+    return combineLatest(this._orderByValue$, this._limit$).pipe(
+      switchMap(([value, limit]: [string, number]) => {
+        return this.rtdb
+          .list<T>(this._path, (ref) => {
+            let query =
+              this._orderBy && value
+                ? ref.orderByChild(this._orderBy).equalTo(value)
+                : ref;
+            query = query.limitToFirst(limit);
+            return query;
+          })
+          .snapshotChanges()
+          .pipe(
+            map((chenge) => {
+              return chenge.map((c) => ({ ...c.payload.val(), key: c.key }));
+            })
+          );
+      }),
+      shareReplay({ refCount: false, bufferSize: 1 }),
+      tap((val) => console.log('GET LIST', val))
     );
   }
-
-  addItem<T>(newItem: T) {
-    return this._ref.push(newItem);
+  setFilter(value: string) {
+    this._orderByValue$.next(value);
   }
-
-  updateItem<T>(key: string, newItem: T) {
-    return this._ref.update(key, newItem);
+  setLimit(num: number) {
+    this._limit$.next(num);
   }
-
-  deleteItem(key?) {
+  add(data: T) {
+    return this._ref.push(data);
+  }
+  update(key: string, data: T) {
+    return this._ref.update(key, data);
+  }
+  delete(key?: string) {
     return this._ref.remove(key);
+  }
+  set(key: string, data: T) {
+    return this._ref.set(key, data);
+  }
+  get(key: string) {
+    return this.rtdb.object<T>(`${this._path}/${key}`).valueChanges();
   }
 }
