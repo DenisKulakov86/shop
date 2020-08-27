@@ -27,7 +27,7 @@ import {
 import { ModalComponent } from '../modal/modal.component';
 import { Observable, Subscribable, Subscription, of } from 'rxjs';
 import { DataBaseService } from 'src/app/service/database.service';
-import { take, delay, map } from 'rxjs/operators';
+import { take, delay, map, tap } from 'rxjs/operators';
 import { isNumber } from 'util';
 
 @Component({
@@ -35,19 +35,22 @@ import { isNumber } from 'util';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   providers: [DataBaseService],
-  //   changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   products$: Observable<Product[]>;
   category = category;
   categoryControl: FormControl;
   limit: number;
+  page: number = 1;
+  pageSize: number = 5;
+  collectionSize = 0;
 
   constructor(
     private modalService: NgbModal,
     public ps: DataBaseService<Product>
   ) {
-    ps.init({ path: 'products', orderBy: 'category', limit: 10 });
+    ps.init({ path: 'products', orderBy: 'category', limit: 0 });
   }
   setLimit(val: number) {
     this.limit += val;
@@ -65,7 +68,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.categoryControl.valueChanges.subscribe((cat) => {
       this.ps.setFilter(cat);
     });
-    this.products$ = this.ps.list();
+    this.products$ = this.ps
+      .list()
+      .pipe(tap((v) => (this.collectionSize = v.length)));
   }
 
   ngOnDestroy() {}
@@ -96,5 +101,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
   delBranch() {
     this.ps.delete();
+  }
+  getCount() {
+    // this.page++;
+    return this.ps.getCount().pipe(tap(console.log));
+    //.subscribe((val) => console.log(val));
   }
 }

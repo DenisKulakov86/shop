@@ -17,7 +17,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-
+import { HttpClientModule } from '@angular/common/http';
 function platformInitialized() {
   console.log('PLATFORM_INITIALIZER', arguments);
   return () => {};
@@ -36,7 +36,9 @@ function platformInitialized() {
     AngularFireDatabaseModule,
 
     ReactiveFormsModule,
-    FormsModule,
+	FormsModule,
+	HttpClientModule
+	
   ],
   providers: [
     {

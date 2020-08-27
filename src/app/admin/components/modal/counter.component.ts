@@ -1,11 +1,17 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormControlName, FormGroup, FormControl } from '@angular/forms';
+import {
+  FormControlName,
+  FormGroup,
+  FormControl,
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 import { timer, Subscriber, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-counter',
   template: `
-    <div [formGroup]="form" class="form-row">
+    <div class="form-row">
       <button
         class=" btn btn-primary mx-1"
         type="button"
@@ -14,16 +20,19 @@ import { timer, Subscriber, Subscription } from 'rxjs';
         (mouseup)="stopAutoplay()"
         (touchstart)="autoplay('decrement')"
         (touchend)="stopAutoplay()"
+        (mouseleave)="stopAutoplay()"
       >
         -
       </button>
       <input
-        #input
+        [ngModel]="value"
+        (ngModelChange)="setValue($event)"
+        [ngModelOptions]="{ updateOn: 'blur' }"
         class="form-control col-3 col-sm-5"
         id="{{ id }}"
         type="number"
         min="{{ min }}"
-        [formControlName]="fcn"
+        max="{{ max }}"
       />
       <button
         class="btn btn-primary mx-1 "
@@ -33,18 +42,10 @@ import { timer, Subscriber, Subscription } from 'rxjs';
         (mouseup)="stopAutoplay()"
         (touchstart)="autoplay('increment')"
         (touchend)="stopAutoplay()"
+        (mouseleave)="stopAutoplay()"
       >
         +
       </button>
-    </div>
-    <div
-      *ngIf="
-        form.get(fcn).invalid && (form.get(fcn).dirty || form.get(fcn).touched)
-      "
-      class="mt-2 alert alert-warning"
-      role="alert"
-    >
-      min {{ min }}
     </div>
   `,
   styles: [
@@ -60,30 +61,58 @@ import { timer, Subscriber, Subscription } from 'rxjs';
       }
     `,
   ],
+  providers: [
+    { provide: NG_VALUE_ACCESSOR, useExisting: CounteComponent, multi: true },
+  ],
 })
-export class CounteComponent implements OnInit {
-  @Input('step') step: number;
-  @Input('fcn') fcn: string;
+export class CounteComponent implements OnInit, ControlValueAccessor {
+  private _step: number = 1;
+  private _min: number = 0;
+  private _max: number = Infinity;
+  @Input('step') set step(val) {
+    this._step = Number(val);
+  }
+  @Input('value') value: number = 0;
+  //   @Input('fcn') fcn: string;
   @Input('id') id;
-  @Input('formGroup') form: FormGroup;
-  @Input('min') min;
+  //   @Input('formGroup') form: FormGroup;
+  @Input('min') set min(val) {
+    this._min = Number(val);
+  }
+  @Input('max') set max(val) {
+    this._max = Number(val);
+  }
+  onChange: Function;
 
   subAutoplay: Subscription;
   constructor() {}
+  registerOnChange(fn) {
+    this.onChange = fn;
+  }
+  writeValue(value) {
+    this.value = Number(value);
+  }
+  registerOnTouched(fn) {}
 
   ngOnInit(): void {}
   increment() {
-    const ctr = this.form.get(this.fcn);
-    ctr.setValue(ctr.value + +this.step);
+    this.value =
+      this.value + this._step > this._max ? this._max : this.value + this._step;
+    // this.value = Math.floor(this.value / this._step) * this._step;
+    this.onChange(this.value);
+  }
+  setValue(value) {
+    this.value = Math.max(value, this._min);
+    this.value = Math.min(value, this._max);
+    this.onChange(this.value);
   }
   decrement() {
-    const ctr = this.form.get(this.fcn);
-    ctr.setValue(
-      ctr.value - (ctr.value - +this.step < this.min ? 0 : this.step)
-    );
+    this.value =
+      this.value - this._step < this._min ? this._min : this.value - this._step;
+    this.onChange(this.value);
   }
-  autoplay(nfn: string) {
-    this.subAutoplay = timer(500, 100).subscribe(() => this[nfn]());
+  autoplay(fn: string) {
+    this.subAutoplay = timer(500, 50).subscribe(() => this[fn]());
   }
   stopAutoplay() {
     this.subAutoplay && this.subAutoplay.unsubscribe();

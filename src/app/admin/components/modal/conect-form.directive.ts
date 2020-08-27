@@ -26,7 +26,8 @@ export class ConectFormDirective {
     this.fgd.form.addControl(
       'img',
       this.fb.control(value.img, [Validators.required, Validators.minLength(1)])
-    );
+	);
+	
   }
   constructor(private fgd: FormGroupDirective, private fb: FormBuilder) {}
 

@@ -24,10 +24,12 @@ import {
   finalize,
 } from 'rxjs/operators';
 import DataBase from './batabase.interface';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class DataBaseService<T> {
-  private _limit$: BehaviorSubject<number> = new BehaviorSubject(10);
+  private _limit$: BehaviorSubject<number> = new BehaviorSubject(0);
   private _orderByValue$: BehaviorSubject<string> = new BehaviorSubject('');
   private _path = '';
   private _orderBy = '';
@@ -39,10 +41,10 @@ export class DataBaseService<T> {
     return this._orderByValue$.value;
   }
 
-  constructor(private rtdb: AngularFireDatabase) {
+  constructor(private rtdb: AngularFireDatabase, private http: HttpClient) {
     console.log('INIT DataBase Service'.toLocaleUpperCase());
   }
-  init({ path, orderBy = '', limit = 10 }) {
+  init({ path, orderBy = '', limit = 0 }) {
     this._orderBy = orderBy;
     this._path = path;
     this._ref = this.rtdb.list<T>(path);
@@ -57,7 +59,7 @@ export class DataBaseService<T> {
               this._orderBy && value
                 ? ref.orderByChild(this._orderBy).equalTo(value)
                 : ref;
-            query = query.limitToFirst(limit);
+            query = limit ? query.limitToFirst(limit) : query;
             return query;
           })
           .snapshotChanges()
@@ -91,5 +93,16 @@ export class DataBaseService<T> {
   }
   get(key: string) {
     return this.rtdb.object<T>(`${this._path}/${key}`).valueChanges();
+  }
+  getCount() {
+    const params: HttpParams = new HttpParams().set('shallow', 'true');
+    return this.http
+      .get(`${environment.firebaseConfig.databaseURL}/${this._path}.json`, {
+        params,
+      })
+      .pipe(
+        tap(console.log),
+        map((val: { [k: string]: boolean }) => Object.keys(val).length)
+      );
   }
 }
