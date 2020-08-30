@@ -1,4 +1,4 @@
-<div *ngIf="product" class="card mb-3">
+<div appHover  *ngIf="product" class="card mb-3">
 	<div class="card-img-top overflow-hidden">
 		<img ondragstart="return false;" src="{{product.img}}" alt="img product">
 	</div>
@@ -11,3 +11,4 @@
 		<div class=" font-weight-bold">{{product.price | currency:"RUB":"symbol-narrow"}}</div>
 	</div>
 </div>
+<!-- [@aminHover]="true" -->

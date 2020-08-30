@@ -35,3 +35,8 @@
 		</form>
 	</div>
 </div>
+
+<ng-container *ngIf="(images$ | async)  as sizes">
+	<!-- <ng-container *ngIf="(sizes$ | async)  as sizes"> -->
+	<!-- {{sizes | json}} -->
+</ng-container>

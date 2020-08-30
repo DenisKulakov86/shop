@@ -12,6 +12,7 @@ import { ModalComponent } from './components/modal/modal.component';
 import { ConectFormDirective } from './components/modal/conect-form.directive';
 import { CounteComponent } from './components/modal/counter.component';
 import { FileUploadComponent } from './components/modal/file-upload.component';
+import { SharedModule } from '../shared/shared.module';
 @NgModule({
   declarations: [
     AdminComponent,
@@ -22,13 +23,7 @@ import { FileUploadComponent } from './components/modal/file-upload.component';
     CounteComponent,
     FileUploadComponent,
   ],
-  imports: [
-    CommonModule,
-    AdminRoutingModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NgbModule,
-  ],
+  imports: [AdminRoutingModule, ReactiveFormsModule, SharedModule],
   providers: [],
 })
 export class AdminModule {}

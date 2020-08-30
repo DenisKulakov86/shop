@@ -1,2 +1,9 @@
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
+// <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,700);
+
+body {
+    font-family: 'Roboto', sans-serif !important;
+    background: #fafafa;
+}

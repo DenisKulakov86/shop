@@ -26,8 +26,21 @@ import {
 import DataBase from './batabase.interface';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { Product } from '../model/product.model';
 
-@Injectable()
+const instriment = function <T>(src: Observable<T>): Observable<T> {
+  return new Observable<T>(function (obs) {
+    let sub = src.subscribe(obs);
+    return () => {
+      console.log('unsubscribe'.toLocaleUpperCase());
+      sub.unsubscribe();
+    };
+  });
+};
+
+@Injectable({
+  providedIn: 'root',
+})
 export class DataBaseService<T> {
   private _limit$: BehaviorSubject<number> = new BehaviorSubject(0);
   private _orderByValue$: BehaviorSubject<string> = new BehaviorSubject('');
@@ -44,22 +57,33 @@ export class DataBaseService<T> {
   constructor(private rtdb: AngularFireDatabase, private http: HttpClient) {
     console.log('INIT DataBase Service'.toLocaleUpperCase());
   }
-  init({ path, orderBy = '', limit = 0 }) {
+  init({ path, orderBy = '' }) {
     this._orderBy = orderBy;
     this._path = path;
     this._ref = this.rtdb.list<T>(path);
-    this._limit$.next(limit);
+  }
+  private setOrderValue(
+    ref: firebase.database.Reference,
+    order: string,
+    value: string
+  ): firebase.database.Query {
+    return order && value
+      ? ref.orderByChild(this._orderBy).equalTo(value)
+      : ref;
+  }
+  private setLimitValue(
+    ref: firebase.database.Reference | firebase.database.Query,
+    limit
+  ): firebase.database.Query {
+    return limit ? ref.limitToFirst(limit) : ref;
   }
   list() {
-    return combineLatest(this._orderByValue$, this._limit$).pipe(
+    const list = combineLatest(this._orderByValue$, this._limit$).pipe(
       switchMap(([value, limit]: [string, number]) => {
         return this.rtdb
           .list<T>(this._path, (ref) => {
-            let query =
-              this._orderBy && value
-                ? ref.orderByChild(this._orderBy).equalTo(value)
-                : ref;
-            query = limit ? query.limitToFirst(limit) : query;
+            let query = this.setOrderValue(ref, this._orderBy, value);
+            query = this.setLimitValue(query, limit);
             return query;
           })
           .snapshotChanges()
@@ -69,9 +93,10 @@ export class DataBaseService<T> {
             })
           );
       }),
-      shareReplay({ refCount: false, bufferSize: 1 }),
       tap((val) => console.log('GET LIST', val))
+      //   shareReplay({ refCount: false, bufferSize: 1 })
     );
+    return instriment(list).pipe(shareReplay(1));
   }
   setFilter(value: string) {
     this._orderByValue$.next(value);

@@ -34,7 +34,7 @@ import { isNumber } from 'util';
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  providers: [DataBaseService],
+//   providers: [DataBaseService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
@@ -50,7 +50,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     public ps: DataBaseService<Product>
   ) {
-    ps.init({ path: 'products', orderBy: 'category', limit: 0 });
+    ps.init({ path: 'products', orderBy: 'category' });
   }
   setLimit(val: number) {
     this.limit += val;

@@ -4,6 +4,7 @@ import {
   PLATFORM_INITIALIZER,
   APP_INITIALIZER,
   APP_BOOTSTRAP_LISTENER,
+  InjectionToken,
 } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,27 +19,27 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { timer } from 'rxjs';
+import { DataBaseService } from './service/database.service';
+import { Product } from './model/product.model';
+import { Router } from '@angular/router';
+import { SharedModule } from './shared/shared.module';
+import {
+  NoopAnimationsModule,
+  BrowserAnimationsModule,
+} from '@angular/platform-browser/animations';
 function platformInitialized() {
-  console.log('PLATFORM_INITIALIZER', arguments);
+  console.log('PLATFORM_INITIALIZER', arguments, [].slice.call(arguments));
   return () => {};
 }
+
 @NgModule({
   declarations: [AppComponent, NotfoundComponent],
   imports: [
-    CommonModule,
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
-    NgbModule,
-    //firebase
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    // AngularFirestoreModule,
-    AngularFireAuthModule,
-    AngularFireDatabaseModule,
-
-    ReactiveFormsModule,
-	FormsModule,
-	HttpClientModule
-	
+    SharedModule,
   ],
   providers: [
     {
