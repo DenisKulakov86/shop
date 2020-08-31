@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { NotfoundComponent } from './notfound.component';
 import { AppComponent } from './app.component';
+import { FollowListComponent } from './shop/components/follow-list/follow-list.component';
 // import { AppComponent } from './admin/admin.module#AdminModule';
 
 const routes: Routes = [

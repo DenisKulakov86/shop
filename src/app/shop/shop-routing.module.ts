@@ -4,6 +4,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { ShopComponent } from './shop.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { ProductsResolver } from '../shared/shop.resolve';
+import { FollowListComponent } from './components/follow-list/follow-list.component';
+
+const childRoutes: Routes = [];
 
 const routes: Routes = [
   {
@@ -13,7 +16,9 @@ const routes: Routes = [
     resolve: {
       products: ProductsResolver,
     },
+    children: childRoutes,
   },
+  { path: 'follow-list', component: FollowListComponent },
   { path: ':id', component: ProductDetailsComponent },
 ];
 

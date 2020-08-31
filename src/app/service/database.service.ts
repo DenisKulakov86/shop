@@ -54,7 +54,7 @@ export class DataBaseService<T> {
     return this._orderByValue$.value;
   }
 
-  constructor(private rtdb: AngularFireDatabase, private http: HttpClient) {
+  constructor( private rtdb: AngularFireDatabase, private http: HttpClient) {
     console.log('INIT DataBase Service'.toLocaleUpperCase());
   }
   init({ path, orderBy = '' }) {

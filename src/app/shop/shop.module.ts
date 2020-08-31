@@ -9,9 +9,10 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DataBaseService } from '../service/database.service';
 import { Product } from '../model/product.model';
 import { SharedModule } from '../shared/shared.module';
+import { FollowListComponent } from './components/follow-list/follow-list.component';
 
 @NgModule({
-  declarations: [ShopComponent, ProductCardComponent, ProductDetailsComponent],
+  declarations: [ShopComponent, ProductCardComponent, ProductDetailsComponent, FollowListComponent],
   imports: [ShopRoutingModule, SharedModule],
   providers: [],
 })

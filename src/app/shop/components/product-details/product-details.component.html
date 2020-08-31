@@ -10,33 +10,37 @@
 		<form [formGroup]="form" (ngSubmit)="submit(form.value)">
 
 			<div class="form-group">
-				<label for="num">Выберите количество</label>
-				<input id="num" class="form-control" formControlName="num" type="number">
-
+				<label for="num">Количество:</label>
+				<input id="num" class="form-control" formControlName="num" type="number" min='1' placeholder="">
 			</div>
-			<div *ngIf="form.errors" class="mt-2 alert alert-danger" role="alert">
-				{{getError()}}
+			<div *ngIf="form.invalid && form.errors?.maxNum && isShowWarning" class="mt-2 alert alert-danger"
+				role="alert">
+				{{ form.errors['maxNum']}}
+			</div>
+			<div *ngIf="form.get('num').invalid && isShowWarning" class="mt-2 alert alert-danger" role="alert">
+				Выберите количество
 			</div>
 
 			<div class="form-group">
-				<label for="size">Выберите размер</label>
-				<select id="size" class="form-control" formControlName="size">
-					<option value=""></option>
+				<label for="size">Размер:</label>
+				<select #select id="size" class="form-control" formControlName="size">
+					<option value="">Пожалуйста, выберите</option>
 					<option *ngFor="let size of sizes">{{size}}</option>
 					<!-- <option *ngFor="let size of sizes" [ngValue]="size.c">{{size.n}}</option> -->
 				</select>
 			</div>
-			<div *ngIf="form.get('size').invalid && (form.dirty || form.touched)" class="mt-2 alert alert-danger"
-				role="alert">
+			<div *ngIf=" form.get('size').invalid && isShowWarning" class="mt-2 alert alert-danger" role="alert">
 				Выберите размер
 			</div>
-			<button [disabled]="form.invalid && (form.dirty || form.touched)" type="submit"
-				class=" w-100 btn btn-primary">Добавить в корзину</button>
+			<button type="submit" class=" w-100 btn btn-primary">Добавить в корзину</button>
+			<!-- <div *ngIf="form.errors && form.errors['num']" class="mt-2 alert alert-danger" role="alert">
+				{{form.errors['num']}}
+			</div> -->
 		</form>
 	</div>
 </div>
 
-<ng-container *ngIf="(images$ | async)  as sizes">
-	<!-- <ng-container *ngIf="(sizes$ | async)  as sizes"> -->
-	<!-- {{sizes | json}} -->
-</ng-container>
+<!-- <ng-container *ngIf="(images$ | async)  as sizes"> -->
+<!-- <ng-container *ngIf="(sizes$ | async)  as sizes"> -->
+<!-- {{sizes | json}} -->
+<!-- </ng-container> -->

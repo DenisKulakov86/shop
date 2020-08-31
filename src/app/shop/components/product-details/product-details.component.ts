@@ -21,8 +21,15 @@ import {
   tap,
   delay,
   take,
+  share,
+  shareReplay,
 } from 'rxjs/operators';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { DataBaseService } from 'src/app/service/database.service';
 
 @Component({
@@ -30,11 +37,12 @@ import { DataBaseService } from 'src/app/service/database.service';
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.scss'],
   providers: [DataBaseService],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductDetailsComponent implements OnInit {
   product: Product;
   form: FormGroup;
+  isShowWarning = false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private ps: DataBaseService<Product>,
@@ -43,45 +51,6 @@ export class ProductDetailsComponent implements OnInit {
   ) {
     ps.init({ path: 'products' });
   }
-
-  products$: Observable<Product[]>;
-  obj;
-  get images$() {
-    console.log('GET');
-    let newObj = this.products$.pipe(
-      map((p) =>
-        p.map((p) =>
-          Object.entries(p.size)
-            .filter(([, c]) => c > 0)
-            .map(([s, c]) => s)
-        )
-      )
-    );
-    if (this.obj !== newObj) {
-      this.obj = newObj;
-      console.log('ogject change');
-    }
-    return newObj;
-  }
-
-  get sizes$() {
-    console.log('GET');
-
-    const key = this.activatedRoute.snapshot.params.id;
-    let newObj = this.ps.get(key).pipe(
-      take(1),
-      map((p) =>
-        Object.entries(p.size)
-          .filter(([, c]) => c > 0)
-          .map(([s]) => s)
-      )
-    );
-    if (this.obj !== newObj) {
-      this.obj = newObj;
-      console.log('ogject change');
-    }
-    return newObj;
-  }
   get sizes() {
     return Object.entries(this.product.size)
       .filter(([, c]) => c > 0)
@@ -89,23 +58,34 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.products$ = this.ps.list();
+    this.form = this.fb.group(
+      {
+        num: [
+          1,
+          [
+            Validators.required,
+            Validators.min(1),
+          ],
+        ],
+        size: ['', [Validators.required]],
+      },
+      {
+        validators: this.validatorNum.bind(this),
+      }
+    );
     const key = this.activatedRoute.snapshot.params.id;
     this.ps.get(key).subscribe((p) => (this.product = p));
 
-    this.form = this.fb.group(
-      {
-        size: ['', [Validators.required]],
-        num: [1, [Validators.required, Validators.min(1)]],
-      },
-      {
-        validators: this.validatorForm.bind(this),
-      }
-    );
-    // this.sizes$.subscribe(console.log);
-    this.form.valueChanges.subscribe(() => console.log(this.form.errors));
-    this.form.statusChanges.subscribe(console.log);
+    this.form.valueChanges.subscribe((v) => {
+      console.log(v);
+      this.isShowWarning = false;
+    });
+    this.form.statusChanges.subscribe((v) => {
+      console.log(this.form.errors);
+      console.log(v);
+    });
   }
+
   getError() {
     if (!this.form.errors) return;
     return Object.entries(this.form.errors).reduce(
@@ -113,32 +93,35 @@ export class ProductDetailsComponent implements OnInit {
       ''
     );
   }
-  validatorForm(ctl: FormGroup) {
-    if (!this.product) return;
-    const size = ctl.get('size').value;
-    const num = ctl.get('num').value;
-
-    for (const key of Object.keys(ctl.controls)) {
-      if (ctl.controls[key].invalid) {
-        const invalidControl = this.el.nativeElement.querySelector(
-          '[formcontrolname="' + key + '"]'
-        );
-        invalidControl.focus();
-        break;
-      }
-    }
-
+  validatorNum(cntrl: FormGroup) {
+    const size = Number(cntrl.get('size').value);
+    const num = cntrl.get('num').value;
     if (!size) return null;
     if (this.product.size[size] >= num) return null;
     return {
-      num: `Доступно ${this.product.size[size]} шт.`,
+      maxNum: `Доступно ${this.product.size[size]} шт.`,
     };
   }
   submit(value) {
     console.log(this.form.get('num').errors, this.form.errors);
+    if (this.form.errors && this.form.errors['maxNum']) {
+      const invalidControl = this.el.nativeElement.querySelector(
+        `[formcontrolname="num"]`
+      );
+      invalidControl.focus();
+    } else {
+      for (const key of Object.keys(this.form.controls)) {
+        if (this.form.controls[key].invalid) {
+          const invalidControl = this.el.nativeElement.querySelector(
+            `[formcontrolname="${key}"]`
+          );
+          invalidControl.focus();
+          break;
+        }
+      }
+    }
+    this.isShowWarning = true;
 
-    //   this.form.get('sze').
-    this.form.markAsTouched();
-    console.log(value);
+    this.form.valid && console.log(value);
   }
 }

@@ -2,8 +2,11 @@
 	<!-- <div class="jumbotron">
 		<h1 class="display-4">Распродажа одежды</h1>
 	</div> -->
+	<header class="header mb-4">
+		<button [routerLink]="['follow-list']" class="btn btn-primary ml-auto d-block">Follow List</button>
 
-	<ngb-carousel  [interval]="1000" class="mb-4" *ngIf="(images$ | async) as images">
+	</header>
+	<ngb-carousel [interval]="1000" class="mb-4" *ngIf="(images$ | async) as images">
 		<ng-template *ngFor="let img of images" ngbSlide>
 			<div class="picsum-img-wrapper ">
 				<img [src]="img" alt="Random first slide">
