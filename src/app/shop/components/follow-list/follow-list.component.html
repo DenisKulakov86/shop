@@ -1,7 +1,13 @@
 <p>follow-list works!</p>
 <button (click)="load()" class="btn btn-primary">load</button>
-<div>
+<!-- <div>
     {{items$ | async | json}}
+</div> -->
+<div>
+    <div>Products</div>
+    {{entities | async | json}}
 </div>
-
-
+<!-- <div>
+    <div>Orders</div>
+    {{orders | async | json}}
+</div> -->

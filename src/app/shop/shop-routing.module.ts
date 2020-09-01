@@ -19,7 +19,7 @@ const routes: Routes = [
     children: childRoutes,
   },
   { path: 'follow-list', component: FollowListComponent },
-  { path: ':id', component: ProductDetailsComponent },
+  { path: 'details', component: ProductDetailsComponent },
 ];
 
 @NgModule({

@@ -7,27 +7,22 @@ import {
   InjectionToken,
 } from '@angular/core';
 
+import { NgxsModule } from '@ngxs/store';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NotfoundComponent } from './notfound.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
 
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFireDatabaseModule } from '@angular/fire/database';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { timer } from 'rxjs';
-import { DataBaseService } from './service/database.service';
-import { Product } from './model/product.model';
-import { Router } from '@angular/router';
 import { SharedModule } from './shared/shared.module';
 import {
   NoopAnimationsModule,
   BrowserAnimationsModule,
 } from '@angular/platform-browser/animations';
+import { EntitiesState } from './store/state/entities.state';
+import { ProductsState } from './store/state/products.state';
+import { OrdersState } from './store/state/orders.state';
 function platformInitialized() {
   console.log('PLATFORM_INITIALIZER', arguments, [].slice.call(arguments));
   return () => {};
@@ -40,6 +35,15 @@ function platformInitialized() {
     BrowserAnimationsModule,
     AppRoutingModule,
     SharedModule,
+    NgxsReduxDevtoolsPluginModule.forRoot(),
+
+    NgxsModule.forRoot([ProductsState], {
+      developmentMode: !environment.production,
+      selectorOptions: {
+        suppressErrors: false,
+        injectContainerState: false,
+      },
+    }),
   ],
   providers: [
     {

@@ -9,7 +9,7 @@ import {
   TemplateRef,
   ElementRef,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, pairs, of, Subject } from 'rxjs';
 import { Product } from 'src/app/model/product.model';
 import {
@@ -60,20 +60,15 @@ export class ProductDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group(
       {
-        num: [
-          1,
-          [
-            Validators.required,
-            Validators.min(1),
-          ],
-        ],
+        num: [1, [Validators.required, Validators.min(1)]],
         size: ['', [Validators.required]],
       },
       {
         validators: this.validatorNum.bind(this),
       }
     );
-    const key = this.activatedRoute.snapshot.params.id;
+    const key = this.activatedRoute.snapshot.queryParams.key;
+
     this.ps.get(key).subscribe((p) => (this.product = p));
 
     this.form.valueChanges.subscribe((v) => {

@@ -10,10 +10,21 @@ import { DataBaseService } from '../service/database.service';
 import { Product } from '../model/product.model';
 import { SharedModule } from '../shared/shared.module';
 import { FollowListComponent } from './components/follow-list/follow-list.component';
+import { NgxsModule } from '@ngxs/store';
+import { ProductsState } from '../store/state/products.state';
 
 @NgModule({
-  declarations: [ShopComponent, ProductCardComponent, ProductDetailsComponent, FollowListComponent],
-  imports: [ShopRoutingModule, SharedModule],
+  declarations: [
+    ShopComponent,
+    ProductCardComponent,
+    ProductDetailsComponent,
+    FollowListComponent,
+  ],
+  imports: [
+    ShopRoutingModule,
+    SharedModule,
+    NgxsModule.forFeature([ProductsState]),
+  ],
   providers: [],
 })
 export class ShopModule {}
