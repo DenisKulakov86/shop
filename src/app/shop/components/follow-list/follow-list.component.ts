@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import ItemsStore from 'src/app/shared/items.store';
 import { Observable } from 'rxjs';
 import { GetItems } from 'src/app/shared/store';
@@ -7,6 +7,7 @@ import { GetItems } from 'src/app/shared/store';
   selector: 'app-follow-list',
   templateUrl: './follow-list.component.html',
   styleUrls: ['./follow-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FollowListComponent implements OnInit {
   items$: Observable<any[]>;
@@ -16,11 +17,9 @@ export class FollowListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.items$ = this.itemsStore.items$;
-    this.items$.subscribe(console.log);
+    // this.items$ = this.itemsStore.items$;
   }
   load() {
-    debugger;
-    this.itemsStore.dispatch(new GetItems());
+    this.itemsStore.dispatch(new GetItems()).subscribe(console.log);
   }
 }
