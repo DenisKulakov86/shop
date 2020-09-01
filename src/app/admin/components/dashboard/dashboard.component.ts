@@ -27,20 +27,24 @@ import {
 import { ModalComponent } from '../modal/modal.component';
 import { Observable, Subscribable, Subscription, of } from 'rxjs';
 import { DataBaseService } from 'src/app/service/database.service';
-import { take, delay, map, tap } from 'rxjs/operators';
+import { take, delay, map, tap, first } from 'rxjs/operators';
 import { isNumber } from 'util';
+import { Selector, Select, Store } from '@ngxs/store';
+import { ProductsState } from 'src/app/store/state/products.state';
+import { GetItems } from 'src/app/store/action/entities.action';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-//   providers: [DataBaseService],
+  //   providers: [DataBaseService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  //@Select(ProductsState.entities<Product>())
   products$: Observable<Product[]>;
   category = category;
-  categoryControl: FormControl;
+  //   categoryControl: FormControl;
   limit: number;
   page: number = 1;
   pageSize: number = 5;
@@ -48,7 +52,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private modalService: NgbModal,
-    public ps: DataBaseService<Product>
+    public ps: DataBaseService<Product>,
+    private store: Store
   ) {
     ps.init({ path: 'products', orderBy: 'category' });
   }
@@ -61,16 +66,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
   getNumber(p: Product) {
     return Object.entries(p.size).reduce((sum, [, val]) => (sum += val), 0);
   }
+  filter(cat) {
+    this.store.dispatch(
+      new GetItems<Product>({ orderBy: 'category', orderValue: cat })
+    );
+  }
+
   ngOnInit(): void {
-    this.categoryControl = new FormControl(this.ps.orderByValue);
+    // this.categoryControl = new FormControl(this.ps.orderByValue);
 
     this.limit = this.ps.limit;
-    this.categoryControl.valueChanges.subscribe((cat) => {
-      this.ps.setFilter(cat);
-    });
-    this.products$ = this.ps
-      .list()
-      .pipe(tap((v) => (this.collectionSize = v.length)));
+
+    this.products$ = this.store
+      .select(ProductsState.entities<Product>())
+      .pipe(tap((products) => (this.collectionSize = products.length)));
+
+    // this.products$.pipe(first()).subscribe(console.log);
+    // this.categoryControl.valueChanges.subscribe((cat) => {
+    //   this.ps.setFilter(cat);
+    // });
+    // this.products$ = this.ps
+    //   .list()
+    //   .pipe(tap((v) => (this.collectionSize = v.length)));
   }
 
   ngOnDestroy() {}

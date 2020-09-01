@@ -37,7 +37,7 @@ function platformInitialized() {
     SharedModule,
     NgxsReduxDevtoolsPluginModule.forRoot(),
 
-    NgxsModule.forRoot([ProductsState], {
+    NgxsModule.forRoot([OrdersState, ProductsState], {
       developmentMode: !environment.production,
       selectorOptions: {
         suppressErrors: false,

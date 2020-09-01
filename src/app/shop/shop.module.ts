@@ -23,7 +23,7 @@ import { ProductsState } from '../store/state/products.state';
   imports: [
     ShopRoutingModule,
     SharedModule,
-    NgxsModule.forFeature([ProductsState]),
+    // NgxsModule.forFeature([ProductsState]),
   ],
   providers: [],
 })

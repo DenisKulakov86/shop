@@ -4,6 +4,7 @@ import { Observable, Subject, BehaviorSubject, combineLatest, of } from 'rxjs';
 import { Product } from '../model/product.model';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-shop',
@@ -17,12 +18,9 @@ export class ShopComponent implements OnInit, AfterContentInit {
   get images$() {
     return this.products$.pipe(map((p) => p.map((p) => p.img)));
   }
-  constructor(
-    private ps: DataBaseService<Product>,
-    private route: ActivatedRoute
-  ) {
+  constructor(private ps: DataBaseService<Product>, private store: Store) {
     console.log('Shop Component constructor'.toLocaleUpperCase());
-
+    store.selectSnapshot((state) => console.log(state));
     // ps.init({ path: 'products' });
   }
   ngOnInit(): void {

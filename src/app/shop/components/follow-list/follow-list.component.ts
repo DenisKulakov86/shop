@@ -26,6 +26,6 @@ export class FollowListComponent implements OnInit {
     // this.items$.subscribe(console.log);
   }
   load() {
-    this.store.dispatch(new GetItems());
+    this.store.dispatch(new GetItems({ limit: 3 }));
   }
 }

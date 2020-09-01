@@ -47,6 +47,7 @@ export class ModalComponent implements OnInit {
   form: FormGroup = null;
   category = category;
   @Input() product$: Observable<Product>;
+  @Input() id: string;
 
   constructor(public activeModal: NgbActiveModal, private fb: FormBuilder) {}
   ngOnInit() {
