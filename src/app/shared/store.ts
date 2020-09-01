@@ -8,6 +8,8 @@ import {
   map,
   filter,
   switchMap,
+  catchError,
+  take,
 } from 'rxjs/operators';
 
 interface Action {
@@ -34,23 +36,32 @@ export default abstract class Store {
     items: [],
     loading: false,
   };
-  private action$: Subject<Action> = new Subject();
+  private action$: Subject<Action>;
   private list$: Observable<Action>;
-  private state$: Observable<State>;
   private dispatcher$;
+  private state$: Observable<State>;
+
+  items$: Observable<any[]>;
+
   constructor(@Optional() dbs?: DataBase) {
-    this.dispatcher$ = merge(this.action$, this.list$);
-    this.state$ = this.dispatcher$.pipe(
-      startWith(this.stateDefault),
-      scan<Action, State>(this.reduser.bind(this)),
-      shareReplay(1)
-    );
+    //   Нельзя менять последовательность определения
+    this.action$ = new Subject();
 
     this.list$ = this.action$.pipe(
       typeOf('Get Items'),
       switchMap((action) => of([1, 2, 3, 4])),
       map((payload) => ({ type: 'Get Items complite', payload }))
     );
+
+    this.dispatcher$ = merge(this.action$, this.list$);
+
+    this.state$ = this.dispatcher$.pipe(
+      startWith(this.stateDefault),
+      scan<Action, State>(this.reduser.bind(this)),
+      shareReplay(1)
+    );
+
+    this.items$ = this.state$.pipe(map((s) => s.items));
   }
 
   private reduser(state: State, action: Action): State {
@@ -59,7 +70,7 @@ export default abstract class Store {
         return { ...state, loading: true };
       case 'Get Items complite':
         return {
-          items: action.payload,
+          items: [...state.items, ...action.payload],
           loading: false,
         };
       default:
@@ -67,16 +78,8 @@ export default abstract class Store {
     }
   }
 
-  get items$() {
-    try {
-      return this.state$.pipe(map((s) => s.items));
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   dispatch(action: Action) {
     this.action$.next(action);
-    return this.state$;
+    return this.state$.pipe();
   }
 }

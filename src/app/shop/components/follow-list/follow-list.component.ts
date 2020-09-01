@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import ItemsStore from 'src/app/shared/items.store';
 import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
@@ -11,6 +11,7 @@ import { GetItems } from 'src/app/store/action/entities.action';
   selector: 'app-follow-list',
   templateUrl: './follow-list.component.html',
   styleUrls: ['./follow-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FollowListComponent implements OnInit {
   @Select(ProductsState.entities<Product>()) entities: Observable<Product[]>;
