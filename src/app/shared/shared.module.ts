@@ -7,14 +7,34 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
-import { HoverDirective } from './hover.directive';
+import { HoverDirective } from '../directives/hover.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { SumPipe } from '../pipes/sum.pipe';
+import { RandomPipe } from '../pipes/random.pipe';
+
+const exports = [
+  CommonModule,
+  ReactiveFormsModule,
+  FormsModule,
+  HttpClientModule,
+  NgbModule,
+  //firebase
+  AngularFireModule,
+  // AngularFirestoreModule,
+  AngularFireAuthModule,
+  AngularFireDatabaseModule,
+  // BrowserAnimationsModule,
+  // NoopAnimationsModule,
+  HoverDirective,
+  SumPipe,
+  RandomPipe,
+];
 
 @NgModule({
-  declarations: [HoverDirective],
+  declarations: [HoverDirective, SumPipe, RandomPipe],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -30,21 +50,7 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
     // BrowserAnimationsModule,
     NgxsReduxDevtoolsPluginModule.forRoot(),
   ],
-  exports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    HttpClientModule,
-    NgbModule,
-    //firebase
-    AngularFireModule,
-    // AngularFirestoreModule,
-    AngularFireAuthModule,
-    AngularFireDatabaseModule,
-    // BrowserAnimationsModule,
-    // NoopAnimationsModule,
-    HoverDirective,
-  ],
+  exports: exports,
   //   providers: [DataBaseService],
 })
 export class SharedModule {}

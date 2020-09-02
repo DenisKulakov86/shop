@@ -11,7 +11,7 @@ import { timer, Subscriber, Subscription } from 'rxjs';
 @Component({
   selector: 'app-counter',
   template: `
-    <div class="form-row">
+    <div>
       <button
         class=" btn btn-primary mx-1"
         type="button"
@@ -28,7 +28,7 @@ import { timer, Subscriber, Subscription } from 'rxjs';
         [ngModel]="value"
         (ngModelChange)="setValue($event)"
         [ngModelOptions]="{ updateOn: 'blur' }"
-        class="form-control col-3 col-sm-5"
+        class="form-control"
         id="{{ id }}"
         type="number"
         min="{{ min }}"

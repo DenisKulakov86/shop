@@ -30,13 +30,13 @@ import {
   Validators,
   FormControl,
 } from '@angular/forms';
-import { DataBaseService } from 'src/app/service/database.service';
+import { Store } from '@ngxs/store';
+import { ProductsState } from 'src/app/store/state/products.state';
 
 @Component({
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.scss'],
-  providers: [DataBaseService],
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductDetailsComponent implements OnInit {
@@ -45,12 +45,10 @@ export class ProductDetailsComponent implements OnInit {
   isShowWarning = false;
   constructor(
     private activatedRoute: ActivatedRoute,
-    private ps: DataBaseService<Product>,
+    private store: Store,
     private fb: FormBuilder,
     private el: ElementRef<any>
-  ) {
-    ps.init({ path: 'products' });
-  }
+  ) {}
   get sizes() {
     return Object.entries(this.product.size)
       .filter(([, c]) => c > 0)
@@ -58,6 +56,10 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const key = this.activatedRoute.snapshot.queryParams.key;
+    this.product = this.store.selectSnapshot(
+      ProductsState.products(key)
+    ) as Product;
     this.form = this.fb.group(
       {
         num: [1, [Validators.required, Validators.min(1)]],
@@ -67,9 +69,6 @@ export class ProductDetailsComponent implements OnInit {
         validators: this.validatorNum.bind(this),
       }
     );
-    const key = this.activatedRoute.snapshot.queryParams.key;
-
-    this.ps.get(key).subscribe((p) => (this.product = p));
 
     this.form.valueChanges.subscribe((v) => {
       console.log(v);

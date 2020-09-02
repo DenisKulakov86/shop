@@ -147,14 +147,21 @@
 // }
 
 .thumb {
-    display: inline-block;
-    max-width: 70px;
-    height: 70px;
-    width: 100%;
-    object-fit: contain;
-    object-position: center;
+  display: inline-block;
+  max-width: 70px;
+  height: 70px;
+  width: 100%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .table td {
-    vertical-align: middle;
+  vertical-align: middle;
+}
+.product-name {
+  max-width: 150px;
+  margin: 0 auto;
+}
+.category-label {
+  max-width: 120px;
 }

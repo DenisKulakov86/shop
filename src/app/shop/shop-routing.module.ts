@@ -13,9 +13,9 @@ const routes: Routes = [
     path: '',
     component: ShopComponent,
     pathMatch: 'full',
-    resolve: {
-      products: ProductsResolver,
-    },
+    // resolve: {
+    //   products: ProductsResolver,
+    // },
     children: childRoutes,
   },
   { path: 'follow-list', component: FollowListComponent },
