@@ -29,12 +29,15 @@ import { Observable, Subscribable, Subscription, of } from 'rxjs';
 import { DataBaseService } from 'src/app/service/database.service';
 import { take, delay, map, tap } from 'rxjs/operators';
 import { isNumber } from 'util';
+import { Store } from '@ngxs/store';
+import { ProductsState } from 'src/app/store/state/products.state';
+import { GetItems, AddItem } from 'src/app/store/action/entities.action';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-//   providers: [DataBaseService],
+  //   providers: [DataBaseService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
@@ -48,7 +51,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private modalService: NgbModal,
-    public ps: DataBaseService<Product>
+    public ps: DataBaseService<Product>,
+    private store: Store
   ) {
     ps.init({ path: 'products', orderBy: 'category' });
   }
@@ -57,6 +61,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (!this.limit) this.limit = 1;
     this.ps.setLimit(this.limit);
   }
+  setCategory(cat) {
+    this.store.dispatch(
+      new GetItems<Product>({
+        orderBy: cat ? 'category' : null,
+        orderValue: cat,
+      })
+    );
+  }
 
   getNumber(p: Product) {
     return Object.entries(p.size).reduce((sum, [, val]) => (sum += val), 0);
@@ -64,20 +76,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.categoryControl = new FormControl(this.ps.orderByValue);
 
-    this.limit = this.ps.limit;
-    this.categoryControl.valueChanges.subscribe((cat) => {
-      this.ps.setFilter(cat);
-    });
-    this.products$ = this.ps
-      .list()
-      .pipe(tap((v) => (this.collectionSize = v.length)));
+    this.products$ = this.store
+      .select(ProductsState.entities<Product>())
+      .pipe(tap((p) => (this.collectionSize = p.length)));
+
+    // this.limit = this.ps.limit;
+    // this.categoryControl.valueChanges.subscribe((cat) => {
+    //   this.ps.setFilter(cat);
+    // });
+    // this.products$ = this.ps
+    //   .list()
+    //   .pipe(tap((v) => (this.collectionSize = v.length)));
   }
 
   ngOnDestroy() {}
 
   create() {
     this.openModal('Новый товар', null).then(
-      (prod) => this.ps.add(prod as Product),
+      (prod) => this.store.dispatch(new AddItem<Product>(prod)), //this.ps.add(prod as Product),
       (reject) => console.log(reject)
     );
   }

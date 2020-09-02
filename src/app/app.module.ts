@@ -22,7 +22,6 @@ import {
 } from '@angular/platform-browser/animations';
 import { EntitiesState } from './store/state/entities.state';
 import { ProductsState } from './store/state/products.state';
-import { OrdersState } from './store/state/orders.state';
 function platformInitialized() {
   console.log('PLATFORM_INITIALIZER', arguments, [].slice.call(arguments));
   return () => {};
@@ -35,7 +34,7 @@ function platformInitialized() {
     BrowserAnimationsModule,
     AppRoutingModule,
     SharedModule,
-    NgxsReduxDevtoolsPluginModule.forRoot(),
+   
 
     NgxsModule.forRoot([ProductsState], {
       developmentMode: !environment.production,

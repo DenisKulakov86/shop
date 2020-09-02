@@ -15,7 +15,7 @@
 		<div class="form-group col-12 col-sm-6 row">
 			<label class="col-form-label mr-3" for="category">Категория</label>
 
-			<select class="form-control" id="category" [formControl]="categoryControl">
+			<select ngModel (ngModelChange)="setCategory($event)" class="form-control" id="category">
 				<option value="">Все</option>
 				<option *ngFor="let cat of category; index as i;" [selected]="categoryControl.value == cat">{{cat}}
 				</option>

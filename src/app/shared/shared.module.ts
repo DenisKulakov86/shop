@@ -11,6 +11,7 @@ import { HoverDirective } from './hover.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 
 @NgModule({
   declarations: [HoverDirective],
@@ -27,6 +28,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AngularFireDatabaseModule,
     // NoopAnimationsModule,
     // BrowserAnimationsModule,
+    NgxsReduxDevtoolsPluginModule.forRoot(),
   ],
   exports: [
     CommonModule,

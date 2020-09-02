@@ -4,8 +4,6 @@ import { Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { Product } from 'src/app/model/product.model';
 import { ProductsState } from 'src/app/store/state/products.state';
-import { OrdersState } from 'src/app/store/state/orders.state';
-import { GetItems } from 'src/app/store/action/entities.action';
 
 @Component({
   selector: 'app-follow-list',
@@ -26,6 +24,6 @@ export class FollowListComponent implements OnInit {
     // this.items$.subscribe(console.log);
   }
   load() {
-    this.store.dispatch(new GetItems());
+    // this.store.dispatch(new GetItems());
   }
 }
