@@ -16,12 +16,18 @@ import { trigger, state, style } from '@angular/animations';
 import { animHover } from 'src/app/shared/animate';
 
 @Directive({
-  selector: 'cardIcon',
+  selector: '[cardIcon]',
 })
 export class CardIconDirective {
+  // @Input() cardIcon;
   // constructor(public tmpRef: ElementRef) {
     constructor(public tmpRef: TemplateRef<any>) {
-    console.log(this.tmpRef);
+  }
+  ngOnInit(): void {
+    // console.log(this.tmpRef);
+    // console.log(this.cardIcon);
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
   }
 }
 
