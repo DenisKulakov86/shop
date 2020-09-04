@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { ProductsState } from 'src/app/store/state/products.state';
 import { tap } from 'rxjs/operators';
+import { AddFollow, DeleteFollow } from 'src/app/store/action/follow.action';
+import { FollowState } from 'src/app/store/state/follow.state';
 
 @Component({
   selector: 'app-shop-view',
@@ -14,16 +16,21 @@ import { tap } from 'rxjs/operators';
 export class ShopViewComponent implements OnInit {
   products$: Observable<Product[]>;
   images: string[] = [];
-  isFollow;
-  constructor(private route: ActivatedRoute, private store: Store) {}
+
+  constructor(private store: Store) {}
   ngOnInit(): void {
     this.products$ = this.store
       .select(ProductsState.products)
       .pipe(tap((p) => setTimeout(() => (this.images = p.map((p) => p.img)))));
   }
   ngAfterContentInit() {}
-  goToFollow(ev: Event) {
+  toggleFollow(ev: Event, key) {
     ev.stopPropagation();
-    this.isFollow = !this.isFollow;
+    if (!~this.store.selectSnapshot(FollowState.follows).indexOf(key))
+      this.store.dispatch(new AddFollow(key));
+    else this.store.dispatch(new DeleteFollow(key));
+  }
+  isFollow(key) {
+    return this.store.selectSnapshot(FollowState.follows).indexOf(key) > -1;
   }
 }

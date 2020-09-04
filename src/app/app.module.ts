@@ -22,6 +22,7 @@ import {
   BrowserAnimationsModule,
 } from '@angular/platform-browser/animations';
 import { ProductsState } from './store/state/products.state';
+import { FollowState } from './store/state/follow.state';
 function platformInitialized() {
   console.log('PLATFORM_INITIALIZER', arguments, [].slice.call(arguments));
   return () => {};
@@ -36,7 +37,7 @@ function platformInitialized() {
     SharedModule,
     NgxsReduxDevtoolsPluginModule.forRoot(),
 
-    NgxsModule.forRoot([ProductsState], {
+    NgxsModule.forRoot([ProductsState, FollowState], {
       developmentMode: !environment.production,
       selectorOptions: {
         suppressErrors: false,
@@ -44,7 +45,7 @@ function platformInitialized() {
       },
     }),
 
-    NgxsStoragePluginModule.forRoot({      key: [ProductsState],    }),
+    NgxsStoragePluginModule.forRoot({ key: [ProductsState, FollowState] }),
   ],
   providers: [
     {

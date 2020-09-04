@@ -1,29 +1,45 @@
-<ngb-carousel [interval]="1500" class="mb-4" *ngIf="(images | random: 5)  as images">
-    <ng-template *ngFor="let img of images" ngbSlide>
-        <div class="picsum-img-wrapper ">
-            <img [src]="img" alt="Random first slide">
-        </div>
-        <div class="carousel-overlay">
-            <div class="carousel-caption">
-                <h1 class="display-4 text-light">Распродажа одежды</h1>
-            </div>
-        </div>
-    </ng-template>
+<ngb-carousel [interval]="0" class="mb-4" *ngIf="images | random: 5 as images">
+  <ng-template *ngFor="let img of images" ngbSlide>
+    <div class="picsum-img-wrapper">
+      <img [src]="img" alt="Random first slide" />
+    </div>
+    <div class="carousel-overlay">
+      <div class="carousel-caption">
+        <h1 class="display-4 text-light">Распродажа одежды</h1>
+      </div>
+    </div>
+  </ng-template>
 </ngb-carousel>
+
 <div class="row">
-    <app-product-card class="col-6 col-md-4 col-lg-3 " *ngFor="let product of products$ | async "
-        [routerLink]="['details']" [queryParams]="{ key: product.key, bar:'bar' }" [product]='product'>
-
-        <button *cardIcon [class.active]="isFollow" class="btn-follow rounded-circle border-0 bg-white p-1 text-center"
-            (click)="goToFollow($event)" type="button">
-            <svg width="1.5rem" height="1.5rem" viewBox="-2 -2 19 19" fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" stroke="#343a40" stroke-width="1.5"
-                    d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
-
-            </svg>
-        </button>
-
-
-    </app-product-card>
+  <app-product-card
+    class="col-6 col-md-4 col-lg-3"
+    *ngFor="let product of products$ | async"
+    [routerLink]="['details']"
+    [queryParams]="{ key: product.key, bar: 'bar' }"
+    [product]="product"
+  >
+    <button
+      *cardIcon
+      [class.active]="isFollow(product.key)"
+      class="btn-follow rounded-circle border-0 bg-white p-1 text-center"
+      (click)="toggleFollow($event, product.key)"
+      type="button"
+    >
+      <svg
+        width="1.5rem"
+        height="1.5rem"
+        viewBox="-2 -2 19 19"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          stroke="#343a40"
+          stroke-width="1.5"
+          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+        />
+      </svg>
+    </button>
+  </app-product-card>
 </div>

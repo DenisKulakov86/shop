@@ -1,15 +1,31 @@
-<h1 class="text-center bg-light p-3">
-    Избранное
-</h1>
-<button (click)="load()" class="btn btn-primary">load</button>
-<!-- <div>
-    {{items$ | async | json}}
-</div> -->
-<div>
-    <div>Products</div>
-    <!-- {{entities | async | json}} -->
+<h1 class="text-center title p-3 mb-3">Избранное</h1>
+<div class="row">
+  <app-product-card
+    class="col-6 col-md-4 col-lg-3"
+    *ngFor="let product of followProducts$ | async"
+    [routerLink]="['/shop/details']"
+    [queryParams]="{ key: product.key, bar: 'bar' }"
+    [product]="product"
+  >
+    <button
+      *cardIcon
+      class="btn-follow rounded-circle border-0 bg-white p-1 text-center"
+      type="button"
+    >
+      <svg
+        width="1.5rem"
+        height="1.5rem"
+        viewBox="-2 -2 19 19"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          stroke="#343a40"
+          stroke-width="1.5"
+          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+        />
+      </svg>
+    </button>
+  </app-product-card>
 </div>
-<!-- <div>
-    <div>Orders</div>
-    {{orders | async | json}}
-</div> -->
