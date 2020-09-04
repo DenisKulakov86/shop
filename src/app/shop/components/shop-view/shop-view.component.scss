@@ -1,0 +1,38 @@
+.picsum-img-wrapper {
+  position: relative;
+  padding-top: 45%;
+
+  & > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+}
+
+.carousel-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: url(../../../../assets/images/pattern.png);
+  background-color: rgba(44, 62, 80, 0.3);
+  background-repeat: repeat;
+}
+
+.carousel:focus {
+  outline: none;
+}
+.carousel-caption {
+  bottom: 50%;
+  transform: translateY(50%);
+}
+.display-4 {
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fafafa;
+}

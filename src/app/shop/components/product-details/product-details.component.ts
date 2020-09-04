@@ -57,9 +57,7 @@ export class ProductDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     const key = this.activatedRoute.snapshot.queryParams.key;
-    this.product = this.store.selectSnapshot(
-      ProductsState.products(key)
-    ) as Product;
+    this.product = this.store.selectSnapshot(ProductsState.productItem(key));
     this.form = this.fb.group(
       {
         num: [1, [Validators.required, Validators.min(1)]],

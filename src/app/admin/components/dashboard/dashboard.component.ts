@@ -67,7 +67,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
   ngOnInit(): void {
     this.products$ = this.store
-      .select(ProductsState.products())
+      .select(ProductsState.products)
       .pipe(tap((p: Product[]) => (this.collectionSize = p.length)));
   }
 
@@ -89,9 +89,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ModalComponent, { size: 'lg' });
     (<ModalComponent>modalRef.componentInstance).title = title;
     (<ModalComponent>modalRef.componentInstance).product$ = key
-      ? (this.store.selectOnce(ProductsState.products(key)) as Observable<
-          Product
-        >)
+      ? this.store.selectOnce(ProductsState.productItem(key))
       : of(newProduct);
 
     return modalRef.result;

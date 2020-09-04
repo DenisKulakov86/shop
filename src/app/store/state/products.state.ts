@@ -44,17 +44,19 @@ export class ProductsState implements NgxsAfterBootstrap, NgxsOnInit {
   }
 
   ngxsAfterBootstrap() {}
+  @Selector()
+  static products(state: ProductsStateModel) {
+    return state.products;
+  }
 
-  static products(key: string = '') {
-    return createSelector([this], (state: ProductsStateModel) => {
-      return key.length
-        ? state.products.find((p) => p.key === key)
-        : state.products;
-    });
+  static productItem(key) {
+    return createSelector([this], (state: ProductsStateModel) =>
+      state.products.find((p) => p.key === key)
+    );
   }
 
   @Action(GetProducts)
-  getItems(ctx: StateContext<ProductsStateModel>, { options }: GetProducts) {
+  getProducts(ctx: StateContext<ProductsStateModel>, { options }: GetProducts) {
     ctx.patchState({ loading: true });
     this.fbs.setFilter(options);
   }

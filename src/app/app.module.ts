@@ -8,6 +8,8 @@ import {
 } from '@angular/core';
 
 import { NgxsModule } from '@ngxs/store';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -32,6 +34,7 @@ function platformInitialized() {
     BrowserAnimationsModule,
     AppRoutingModule,
     SharedModule,
+    NgxsReduxDevtoolsPluginModule.forRoot(),
 
     NgxsModule.forRoot([ProductsState], {
       developmentMode: !environment.production,
@@ -40,6 +43,8 @@ function platformInitialized() {
         injectContainerState: false,
       },
     }),
+
+    NgxsStoragePluginModule.forRoot({      key: [ProductsState],    }),
   ],
   providers: [
     {

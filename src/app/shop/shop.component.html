@@ -1,29 +1,6 @@
-<header class="header">
-	<!-- <div class="jumbotron">
-		<h1 class="display-4">Распродажа одежды</h1>
-	</div> -->
-	<header class="header mb-4">
-		<button [routerLink]="['follow-list']" class="btn btn-primary ml-auto d-block">Follow List</button>
-
-	</header>
-	<ngb-carousel [interval]="1500" class="mb-4" *ngIf="(images | random: 5)  as images">
-		<ng-template *ngFor="let img of images" ngbSlide>
-			<div class="picsum-img-wrapper ">
-				<img [src]="img" alt="Random first slide">
-			</div>
-			<div class="carousel-overlay">
-				<div class="carousel-caption">
-					<h1 class="display-4 ">Распродажа одежды</h1>
-				</div>
-			</div>
-		</ng-template>
-	</ngb-carousel>
+<header class="header bg-dark">
+	<app-header></app-header>
 </header>
 <main>
-	<div class="row">
-		<app-product-card class="col-6 col-md-4 col-lg-3 " *ngFor="let product of products$ | async "
-			[routerLink]="['details']" [queryParams]="{ key: product.key, bar:'bar' }" [product]='product'>
-		</app-product-card>
-	</div>
-
+	<router-outlet></router-outlet>
 </main>

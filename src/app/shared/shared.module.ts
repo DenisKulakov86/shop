@@ -48,7 +48,6 @@ const exports = [
     AngularFireDatabaseModule,
     // NoopAnimationsModule,
     // BrowserAnimationsModule,
-    NgxsReduxDevtoolsPluginModule.forRoot(),
   ],
   exports: exports,
   //   providers: [DataBaseService],
