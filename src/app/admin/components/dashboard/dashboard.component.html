@@ -4,24 +4,25 @@
 
 <div class="form-group">
 	<button class="btn btn-primary" (click)="create()">Добавить товар</button>
-	<button class="btn btn-danger ml-3" (click)="delBranch()"> Удалить ветку</button>
+	<!-- <button class="btn btn-danger ml-3" (click)="delBranch()"> Удалить ветку</button> -->
 	<button class="btn btn-primary" (click)="getCount()">next</button>
 </div>
 
 <div class="w-100 overflow-auto ">
 
-	<div class="form-inline py-1">
+	<!-- <div class="form-inline py-1"> -->
 
-		<div class="form-group col-12 col-sm-6 row">
-			<label class="col-form-label mr-3" for="category">Категория</label>
-
-			<select ngModel class="form-control" id="category" (ngModelChange)="filter($event)">
-				<option value="">Все</option>
-				<option *ngFor="let cat of category; index as i;">{{cat}}
-				</option>
-			</select>
-		</div>
-		<!-- <div class="form-group col-6 row">
+	<div class="form-group d-flex p-1 ">
+		<label class="col-form-label mr-2" for="category ">Категория</label>
+		<!-- <div class="col-sm-5"> -->
+		<select ngModel (ngModelChange)="setCategory($event)" class="form-control w-auto" id="category">
+			<option value="">Все</option>
+			<option *ngFor="let cat of category; index as i;">{{cat}}
+			</option>
+		</select>
+		<!-- </div> -->
+	</div>
+	<!-- <div class="form-group col-6 row">
 
 			<button class=" btn btn-primary mx-1" type="button" (click)="setLimit(-1)">
 				-
@@ -32,7 +33,7 @@
 				+
 			</button>
 		</div> -->
-	</div>
+	<!-- </div> -->
 
 
 	<table class="table table-hover mt-3">
@@ -50,10 +51,12 @@
 				<th>{{i + 1}}</th>
 				<td class="text-center">
 					<img class="thumb" src="{{prod.img}}">
-					{{prod.name}}
+					<div class="product-name text-break">
+						{{prod.name}}
+					</div>
 				</td>
 				<td>{{prod.category}}</td>
-				<td>{{getNumber(prod)}}</td>
+				<td>{{ prod.size | sum }}</td>
 				<td>{{prod.price}}</td>
 				<td><button class="btn btn-danger" (click)="$event.stopPropagation();delete(prod.key)">Удалить</button>
 				</td>

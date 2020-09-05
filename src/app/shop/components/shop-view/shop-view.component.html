@@ -1,15 +1,29 @@
-<h1 class="text-center title p-3 mb-3">Избранное</h1>
+<ngb-carousel [interval]="0" class="mb-4" *ngIf="images | random: 5 as images">
+  <ng-template *ngFor="let img of images" ngbSlide>
+    <div class="picsum-img-wrapper">
+      <img [src]="img" alt="Random first slide" />
+    </div>
+    <div class="carousel-overlay">
+      <div class="carousel-caption">
+        <h1 class="display-4 text-light">Распродажа одежды</h1>
+      </div>
+    </div>
+  </ng-template>
+</ngb-carousel>
+
 <div class="row">
   <app-product-card
     class="col-6 col-md-4 col-lg-3"
-    *ngFor="let product of followProducts$ | async"
-    [routerLink]="['/shop/details']"
+    *ngFor="let product of products$ | async"
+    [routerLink]="['details']"
     [queryParams]="{ key: product.key, bar: 'bar' }"
     [product]="product"
   >
     <button
       *cardIcon
+      [class.active]="isFollow(product.key)"
       class="btn-follow rounded-circle border-0 bg-white p-1 text-center"
+      (click)="toggleFollow($event, product.key)"
       type="button"
     >
       <svg

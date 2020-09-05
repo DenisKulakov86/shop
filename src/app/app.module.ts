@@ -9,6 +9,7 @@ import {
 
 import { NgxsModule } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,9 +21,8 @@ import {
   NoopAnimationsModule,
   BrowserAnimationsModule,
 } from '@angular/platform-browser/animations';
-import { EntitiesState } from './store/state/entities.state';
 import { ProductsState } from './store/state/products.state';
-import { OrdersState } from './store/state/orders.state';
+import { FollowState } from './store/state/follow.state';
 function platformInitialized() {
   console.log('PLATFORM_INITIALIZER', arguments, [].slice.call(arguments));
   return () => {};
@@ -37,13 +37,15 @@ function platformInitialized() {
     SharedModule,
     NgxsReduxDevtoolsPluginModule.forRoot(),
 
-    NgxsModule.forRoot([OrdersState, ProductsState], {
+    NgxsModule.forRoot([ProductsState, FollowState], {
       developmentMode: !environment.production,
       selectorOptions: {
         suppressErrors: false,
         injectContainerState: false,
       },
     }),
+
+    NgxsStoragePluginModule.forRoot({ key: [ProductsState, FollowState] }),
   ],
   providers: [
     {

@@ -18,7 +18,7 @@ export const newProduct: Product = {
   img: '',
 };
 
-export class Product {
+export interface Product {
   name: string;
   price: number;
   size: { [key: number]: number };

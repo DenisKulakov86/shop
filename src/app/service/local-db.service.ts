@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import DataBase from './batabase.interface';
 import { of } from 'rxjs';
 
 @Injectable({ providedIn: "root" })

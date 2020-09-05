@@ -1,21 +1,83 @@
 import { Injectable } from '@angular/core';
-import { EntitiesState, EntitiesStateModel } from './entities.state';
-import { State, Store } from '@ngxs/store';
+import {
+  State,
+  Action,
+  NgxsAfterBootstrap,
+  Store,
+  StateContext,
+  NgxsOnInit,
+  Selector,
+  createSelector,
+} from '@ngxs/store';
 import { Product } from 'src/app/model/product.model';
 import { FirebaseService } from 'src/app/service/firebase.service';
+import { environment } from 'src/environments/environment';
+import {
+  AddProduct,
+  UpdateProduct,
+  DeleteProduct,
+  GetProducts,
+  LoadProducts,
+} from '../action/product.action';
+import { tap, take } from 'rxjs/operators';
 
-interface ProductSateModel extends EntitiesStateModel<Product> {}
-
-@State<ProductSateModel>({
+export interface ProductsStateModel {
+  products: Product[];
+  loading: boolean;
+}
+@State<ProductsStateModel>({
   name: 'Products',
   defaults: {
-    items: [],
+    products: [],
     loading: false,
   },
 })
 @Injectable()
-export class ProductsState extends EntitiesState<Product> {
-  constructor(private fs: FirebaseService<Product>) {
-    super('products', fs);
+export class ProductsState implements NgxsAfterBootstrap, NgxsOnInit {
+  private path = environment.paths.products;
+  constructor(private fbs: FirebaseService<Product>, private store: Store) {}
+
+  ngxsOnInit(ctx: StateContext<ProductsStateModel>) {
+    this.fbs
+      .list(this.path)
+      .subscribe((products) => this.store.dispatch(new LoadProducts(products)));
+  }
+
+  ngxsAfterBootstrap() {}
+  @Selector()
+  static products(state: ProductsStateModel) {
+    return state.products;
+  }
+
+  static productItem(key) {
+    return createSelector([this], (state: ProductsStateModel) =>
+      state.products.find((p) => p.key === key)
+    );
+  }
+
+  @Action(GetProducts)
+  getProducts(ctx: StateContext<ProductsStateModel>, { options }: GetProducts) {
+    ctx.patchState({ loading: true });
+    this.fbs.setFilter(options);
+  }
+
+  @Action(LoadProducts)
+  load(ctx: StateContext<ProductsStateModel>, { products }: LoadProducts) {
+    ctx.patchState({
+      products: products.reverse(),
+      loading: true,
+    });
+  }
+  @Action(AddProduct)
+  add(ctx, { data }: AddProduct) {
+    return this.fbs.add(this.path, data);
+  }
+  @Action(UpdateProduct)
+  update(ctx, { key, data }: UpdateProduct) {
+    return this.fbs.update(this.path, key, data);
+  }
+  @Action(DeleteProduct)
+  delete(ctx, { key }: DeleteProduct) {
+    return this.fbs.delete(key);
   }
 }

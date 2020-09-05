@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { GetItems } from './store/action/entities.action';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +7,5 @@ import { GetItems } from './store/action/entities.action';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  constructor(private store: Store) {
-    this.store.dispatch(new GetItems());
-  }
+  constructor() {}
 }

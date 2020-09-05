@@ -1,17 +1,24 @@
 <div appHover *ngIf="product" class="card mb-3">
-	<div class="card-img-top overflow-hidden">
-		<img ondragstart="return false;" src="{{product.img}}" alt="img product">
-	</div>
-	<div class="card-body">
-		<!-- <svg class="bi" width="1em" height="1em" fill="currentColor">
-			<use xlink:href="bootstrap-icons.svg#heart-fill"></use>
-		</svg> -->
-		<div class="d-flex flex-wrap mb-3">
-			<span *ngFor="let size of sizes" class="badge font-weight-light"
-				[class.text-muted]="size.muted">{{size.value}}</span>
-		</div>
-		<div>{{product.category}}</div>
-		<div class=" font-weight-bold">{{product.price | currency:"RUB":"symbol-narrow"}}</div>
-	</div>
+  <div class="card-img-top overflow-hidden">
+    <ng-template *ngTemplateOutlet="cardIcon?.tmpRef"></ng-template>
+    <img
+      ondragstart="return false;"
+      src="{{ product.img }}"
+      alt="img product"
+    />
+  </div>
+  <div class="card-body">
+    <div class="d-flex flex-wrap mb-3">
+      <span
+        *ngFor="let size of sizes"
+        class="badge font-weight-light"
+        [class.text-muted]="size.muted"
+        >{{ size.value }}</span
+      >
+    </div>
+    <div>{{ product.category }}</div>
+    <div class="font-weight-bold">
+      {{ product.price | currency: "RUB":"symbol-narrow" }}
+    </div>
+  </div>
 </div>
-<!-- [@aminHover]="true" -->
