@@ -1,6 +1,9 @@
-<header class="header bg-dark ">
+<header class="header">
 	<app-header></app-header>
 </header>
 <main>
-	<router-outlet></router-outlet>
+	<div [@routeAnim]="prepareRoute(outlet)">
+		<router-outlet #outlet="outlet"></router-outlet>
+	</div>
+
 </main>

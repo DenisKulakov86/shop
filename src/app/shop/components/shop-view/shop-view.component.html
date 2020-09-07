@@ -1,4 +1,8 @@
-<ngb-carousel [interval]="0" class="mb-4" *ngIf="images | random: 5 as images">
+<ngb-carousel
+  [interval]="0"
+  class="mb-4 "
+  *ngIf="images$ | async | random: 5 as images"
+>
   <ng-template *ngFor="let img of images" ngbSlide>
     <div class="picsum-img-wrapper">
       <img [src]="img" alt="Random first slide" />
@@ -13,7 +17,7 @@
 
 <div class="row">
   <app-product-card
-    class="col-6 col-md-4 col-lg-3"
+    class="col-12 col-sm-6 col-md-4 col-lg-3"
     *ngFor="let product of products$ | async"
     [routerLink]="['details']"
     [queryParams]="{ key: product.key, bar: 'bar' }"

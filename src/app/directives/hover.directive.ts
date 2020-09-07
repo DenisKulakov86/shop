@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
 
 @Directive({
   selector: '[appHover]',
@@ -8,7 +8,13 @@ import { Directive, ElementRef, HostBinding } from '@angular/core';
   },
 })
 export class HoverDirective {
-  @HostBinding('@animHover') isHover = false;
+  @Input('appHover')
+  public isAnim = true;
+  isHover = false;
+  @HostBinding('@animHover') get hovered() {
+    if (!this.isAnim) return false;
+    return this.isHover;
+  }
 
   constructor(private el: ElementRef) {}
   onMouseenter() {

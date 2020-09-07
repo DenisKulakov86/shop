@@ -1,4 +1,4 @@
-<div appHover *ngIf="product" class="card mb-3">
+<div [appHover] *ngIf="product" class="card mb-3">
   <div class="card-img-top overflow-hidden">
     <ng-template *ngTemplateOutlet="cardIcon?.tmpRef"></ng-template>
     <img
@@ -16,9 +16,9 @@
         >{{ size.value }}</span
       >
     </div>
-    <div>{{ product.category }}</div>
-    <div class="font-weight-bold">
-      {{ product.price | currency: "RUB":"symbol-narrow" }}
+    <div class="mb-1">{{ product.category }}</div>
+    <div class="font-weight-bold price">
+      {{ product.price | currency: "RUB":"symbol-narrow":"1.0-2" }}
     </div>
   </div>
 </div>

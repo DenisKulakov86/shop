@@ -1,3 +1,22 @@
-.title{
+.title {
     background-color: #eee;
+}
+
+.btn-follow {
+    color: #343a40;
+    width: 2.5rem;
+    height: 2.5rem;
+    line-height: 1.5rem;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    z-index: 15;
+    outline: none;
+
+}
+
+.card {
+	border: none;
+	background: #000 !important;
+	font-size: 40px;
 }

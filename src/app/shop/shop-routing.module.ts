@@ -13,10 +13,31 @@ const childRoutes: Routes = [
     path: '',
     component: ShopViewComponent,
     pathMatch: 'full',
+    data: {
+      anim: 'anim-1',
+    },
   },
-  { path: 'follow-list', component: FollowListComponent },
-  { path: 'details', component: ProductDetailsComponent },
-  { path: 'basket', component: BasketComponent },
+  {
+    path: 'follow-list',
+    component: FollowListComponent,
+    data: {
+      anim: 'anim-2',
+    },
+  },
+  {
+    path: 'details',
+    component: ProductDetailsComponent,
+    data: {
+      anim: 'anim-3',
+    },
+  },
+  {
+    path: 'basket',
+    component: BasketComponent,
+    data: {
+      anim: 'anim-4',
+    },
+  },
 ];
 
 const routes: Routes = [

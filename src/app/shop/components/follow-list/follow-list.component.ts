@@ -1,4 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
+} from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
 import { Select, Store, Selector } from '@ngxs/store';
 import { Product } from 'src/app/model/product.model';
@@ -11,6 +16,7 @@ import { map } from 'rxjs/operators';
   templateUrl: './follow-list.component.html',
   styleUrls: ['./follow-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+//   encapsulation: ViewEncapsulation.None,
 })
 export class FollowListComponent implements OnInit {
   @Select(ProductsState.products) products$: Observable<Product[]>;
