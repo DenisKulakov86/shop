@@ -1,14 +1,13 @@
 <h1 class="text-center title p-3 mb-3 mx-n3 mx-xl-0">Избранное</h1>
+<!-- [queryParams]="{ key: product.key, bar: 'bar' }" -->
 <!-- [routerLink]="['/shop/details']" -->
-<!-- [queryParams]="{ key: product.key, bar: 'bar' }" -->
-<!-- [routerLink]="['details']" -->
-<!-- [queryParams]="{ key: product.key, bar: 'bar' }" -->
 <app-products-view [products]="followProducts$ | async">
   <div class="card mb-3 border-0 rounded-0" *cardItem="let product">
     <div class="card-img">
       <button
         class="btn-follow-delete rounded-circle border-0 bg-white p-1 text-center"
         type="button"
+        (click)="deleteFollow(product.key)"
       >
         <svg
           width="1.5em"
