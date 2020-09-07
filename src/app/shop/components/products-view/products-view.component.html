@@ -1,4 +1,12 @@
-<div [appHover] *ngIf="product" class="card mb-3">
+<div class="row m-0">
+  <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let prod of products">
+    <ng-container
+      *ngTemplateOutlet="cardItem; context: { $implicit: prod }"
+    ></ng-container>
+  </div>
+</div>
+
+<!-- <div [appHover] *ngIf="product" class="card mb-3">
   <div class="card-img-top overflow-hidden">
     <ng-template *ngTemplateOutlet="cardIcon?.tmpRef"></ng-template>
     <img
@@ -21,4 +29,4 @@
       {{ product.price | currency: "RUB":"symbol-narrow":"1.0-2" }}
     </div>
   </div>
-</div>
+</div> -->

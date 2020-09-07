@@ -3,9 +3,10 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { ShopRoutingModule } from './shop-routing.module';
 import { ShopComponent } from './shop.component';
 import {
-  ProductCardComponent,
+  ProductsViewComponent,
   CardIconDirective,
-} from './components/product-card/product-card.component';
+  CardItemDirective,
+} from './components/products-view/products-view.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { SharedModule } from '../shared/shared.module';
 import { FollowListComponent } from './components/follow-list/follow-list.component';
@@ -16,13 +17,14 @@ import { BasketComponent } from './components/basket/basket.component';
 @NgModule({
   declarations: [
     ShopComponent,
-    ProductCardComponent,
+    ProductsViewComponent,
     ProductDetailsComponent,
     FollowListComponent,
     HeaderComponent,
     ShopViewComponent,
     BasketComponent,
     CardIconDirective,
+    CardItemDirective
   ],
   imports: [
     ShopRoutingModule,

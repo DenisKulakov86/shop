@@ -17,6 +17,11 @@ import { trigger, state, style } from '@angular/animations';
 import { animHover } from 'src/app/animations/animate';
 
 @Directive({
+  selector: '[cardItem]',
+})
+export class CardItemDirective {}
+
+@Directive({
   selector: '[cardIcon]',
 })
 export class CardIconDirective {
@@ -27,16 +32,18 @@ export class CardIconDirective {
 }
 
 @Component({
-  selector: 'app-product-card',
-  templateUrl: './product-card.component.html',
-  styleUrls: ['./product-card.component.scss'],
+  selector: 'app-products-view',
+  templateUrl: './products-view.component.html',
+  styleUrls: ['./products-view.component.scss'],
   animations: [animHover],
   changeDetection: ChangeDetectionStrategy.OnPush,
-//   encapsulation: ViewEncapsulation.None,
+  //   encapsulation: ViewEncapsulation.None,
 })
-export class ProductCardComponent implements OnInit, AfterViewInit {
+export class ProductsViewComponent implements OnInit, AfterViewInit {
+  @Input() products: Product[] = [];
   @Input() product: Product = null;
   @ContentChild(CardIconDirective, { static: false }) cardIcon;
+  @ContentChild(CardItemDirective, { read: TemplateRef }) cardItem;
 
   get sizes() {
     return Object.entries(this.product.size).map(([s, c]) => ({
@@ -46,5 +53,7 @@ export class ProductCardComponent implements OnInit, AfterViewInit {
   }
   constructor() {}
   ngOnInit(): void {}
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    console.log(this.cardItem, this.products);
+  }
 }

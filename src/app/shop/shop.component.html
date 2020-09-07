@@ -1,9 +1,8 @@
-<header class="header">
-	<app-header></app-header>
+<header class="header bg-dark mx-n3 mx-xl-0">
+  <app-header></app-header>
 </header>
 <main>
-	<div [@routeAnim]="prepareRoute(outlet)">
-		<router-outlet #outlet="outlet"></router-outlet>
-	</div>
-
+  <div [@routeAnim]="prepareRoute(outlet)">
+    <router-outlet #outlet="outlet"></router-outlet>
+  </div>
 </main>

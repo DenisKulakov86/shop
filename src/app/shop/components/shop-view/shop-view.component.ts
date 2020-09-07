@@ -14,7 +14,7 @@ import { animHover } from 'src/app/animations/animate';
   templateUrl: './shop-view.component.html',
   styleUrls: ['./shop-view.component.scss'],
   //   changeDetection: ChangeDetectionStrategy.OnPush,
-//   animations: [animHover],
+  animations: [animHover],
 })
 export class ShopViewComponent implements OnInit {
   @Select(ProductsState.products) products$: Observable<Product[]>;
@@ -24,12 +24,18 @@ export class ShopViewComponent implements OnInit {
   ngOnInit(): void {
     this.images$ = this.products$.pipe(map((ap) => ap.map((p) => p.img)));
   }
-  ngAfterContentInit() {}
+  getSizes(sizes) {
+    return Object.entries(sizes).map(([s, c]) => ({
+      value: s,
+      muted: !c,
+    }));
+  }
+
   toggleFollow(ev: Event, key) {
     ev.stopPropagation();
-    if (!~this.store.selectSnapshot(FollowState.follows).indexOf(key))
-      this.store.dispatch(new AddFollow(key));
-    else this.store.dispatch(new DeleteFollow(key));
+    if (~this.store.selectSnapshot(FollowState.follows).indexOf(key))
+      this.store.dispatch(new DeleteFollow(key));
+    else this.store.dispatch(new AddFollow(key));
   }
   isFollow(key) {
     return this.store.selectSnapshot(FollowState.follows).indexOf(key) > -1;

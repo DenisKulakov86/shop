@@ -1,6 +1,6 @@
 <ngb-carousel
   [interval]="0"
-  class="mb-4 "
+  class="mb-4 mx-n3 mx-xl-0"
   *ngIf="images$ | async | random: 5 as images"
 >
   <ng-template *ngFor="let img of images" ngbSlide>
@@ -15,35 +15,59 @@
   </ng-template>
 </ngb-carousel>
 
-<div class="row">
-  <app-product-card
-    class="col-12 col-sm-6 col-md-4 col-lg-3"
-    *ngFor="let product of products$ | async"
+<!-- [appHover] -->
+<!-- *cardItem="let product" -->
+<!-- [routerLink]="['details']" -->
+<!-- [queryParams]="{ key: product.key, bar: 'bar' }" -->
+<app-products-view [products]="products$ | async">
+  <div
+    class="card mb-3"
+    *cardItem="let product"
+    appHover
     [routerLink]="['details']"
     [queryParams]="{ key: product.key, bar: 'bar' }"
-    [product]="product"
   >
-    <button
-      *cardIcon
-      [class.active]="isFollow(product.key)"
-      class="btn-follow rounded-circle border-0 bg-white p-1 text-center"
-      (click)="toggleFollow($event, product.key)"
-      type="button"
-    >
-      <svg
-        width="1.5rem"
-        height="1.5rem"
-        viewBox="-2 -2 19 19"
-        fill="currentColor"
-        xmlns="http://www.w3.org/2000/svg"
+    <div class="card-img-top overflow-hidden">
+      <button
+        [class.active]="isFollow(product.key)"
+        class="btn-follow rounded-circle border-0 bg-white p-1 text-center"
+        (click)="toggleFollow($event, product.key)"
+        type="button"
       >
-        <path
-          fill-rule="evenodd"
-          stroke="#343a40"
-          stroke-width="1.5"
-          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
-        />
-      </svg>
-    </button>
-  </app-product-card>
-</div>
+        <svg
+          width="1.5rem"
+          height="1.5rem"
+          viewBox="-2 -2 19 19"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            stroke="#343a40"
+            stroke-width="1.5"
+            d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+          />
+        </svg>
+      </button>
+      <img
+        ondragstart="return false;"
+        src="{{ product.img }}"
+        alt="img product"
+      />
+    </div>
+    <div class="card-body">
+      <div class="d-flex flex-wrap mb-3">
+        <span
+          *ngFor="let size of getSizes(product.size)"
+          class="badge font-weight-light"
+          [class.text-muted]="size.muted"
+          >{{ size.value }}</span
+        >
+      </div>
+      <div class="mb-1">{{ product.category }}</div>
+      <div class="font-weight-bold price">
+        {{ product.price | currency: "RUB":"symbol-narrow":"1.0-2" }}
+      </div>
+    </div>
+  </div>
+</app-products-view>

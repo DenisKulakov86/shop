@@ -1,22 +1,37 @@
 .title {
-    background-color: #eee;
+  background-color: #eee;
 }
 
-.btn-follow {
-    color: #343a40;
-    width: 2.5rem;
-    height: 2.5rem;
-    line-height: 1.5rem;
+.btn-follow-delete {
+  color: #343a40;
+  width: 2.5rem;
+  height: 2.5rem;
+  line-height: 1.5rem;
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  z-index: 15;
+  outline: none;
+}
+
+.price {
+  font-size: 1.5rem;
+}
+
+.card-img {
+  padding-top: 127.7778%;
+  position: relative;
+
+  img {
     position: absolute;
-    right: 15px;
-    top: 10px;
-    z-index: 15;
-    outline: none;
-
+    top: 0;
+    left: 0;
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+  }
 }
-
-.card {
-	border: none;
-	background: #000 !important;
-	font-size: 40px;
+.form-control:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(9, 102, 24, 0.25);
 }
