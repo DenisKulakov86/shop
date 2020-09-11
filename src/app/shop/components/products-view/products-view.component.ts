@@ -41,19 +41,10 @@ export class CardIconDirective {
 })
 export class ProductsViewComponent implements OnInit, AfterViewInit {
   @Input() products: Product[] = [];
-  @Input() product: Product = null;
-  @ContentChild(CardIconDirective, { static: false }) cardIcon;
+  @Input() mode: 'card' | 'list' = 'card';
   @ContentChild(CardItemDirective, { read: TemplateRef }) cardItem;
 
-  get sizes() {
-    return Object.entries(this.product.size).map(([s, c]) => ({
-      value: s,
-      muted: !c,
-    }));
-  }
   constructor() {}
   ngOnInit(): void {}
-  ngAfterViewInit() {
-    console.log(this.cardItem, this.products);
-  }
+  ngAfterViewInit() {}
 }

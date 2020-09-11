@@ -2,7 +2,10 @@
 <!-- [queryParams]="{ key: product.key, bar: 'bar' }" -->
 <!-- [routerLink]="['/shop/details']" -->
 <app-products-view [products]="followProducts$ | async">
-  <div class="card mb-3 border-0 rounded-0" *cardItem="let product">
+  <div
+    class="card mb-3 border-0 rounded-0"
+    *cardItem="let product; let i = index"
+  >
     <div class="card-img">
       <button
         class="btn-follow-delete rounded-circle border-0 bg-white p-1 text-center"
@@ -37,28 +40,39 @@
         {{ product.price | currency: "RUB":"symbol-narrow":"1.0-2" }}
       </div>
       <div class="mx-n3">
-        <div class="border-top border-bottom p-2 text-muted mb-4">
+        <div class="border-top border-bottom p-2 text-muted mb-3">
           {{ product.category }}
         </div>
         <form>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <input
               class="form-control"
               type="number"
               min="1"
               placeholder="Кол-во"
             />
-          </div>
+          </div> -->
           <div class="form-group">
-            <select class="form-control">
-              <option disabled selected>Размер</option>
-              <option value="1">1</option>
-              <option value="1">1</option>
-              <option value="1">1</option>
-              <option value="1">1</option>
+            <label for="size{{ i }}" class="text-muted">pазмер:</label>
+            <select
+              id="size{{ i }}"
+              class="form-control"
+              [formControl]="sizeCtrl"
+            >
+              <option
+                *ngFor="let size of getSizes(product.size); first as isFirst"
+                [selected]="sizeCtrl.value == size.value"
+              >
+                {{ size.value }}
+              </option>
             </select>
           </div>
-          <button class="btn btn-success w-100">В КОРЗИНУ</button>
+          <button
+            class="btn btn-success w-100"
+            (click)="toBasket(sizeCtrl.value)"
+          >
+            В КОРЗИНУ
+          </button>
         </form>
       </div>
     </div>

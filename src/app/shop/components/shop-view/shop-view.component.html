@@ -19,8 +19,49 @@
 <!-- *cardItem="let product" -->
 <!-- [routerLink]="['details']" -->
 <!-- [queryParams]="{ key: product.key, bar: 'bar' }" -->
-<app-products-view [products]="products$ | async">
+<div class="panel p-3 text-right mb-3">
+  <svg
+    width="1.5rem"
+    height="1.5rem"
+    viewBox="0 0 16 16"
+    class="bi bi-filter-circle"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill-rule="evenodd"
+      d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+    />
+    <path
+      fill-rule="evenodd"
+      d="M7 11.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5z"
+    />
+  </svg>
+  <svg
+    (click)="toggleView()"
+    width="1.5rem"
+    height="1.5rem"
+    viewBox="0 0 16 16"
+    class="ml-3"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill-rule="evenodd"
+      d="M6 1H1v14h5V1zm9 0h-5v5h5V1zm0 9h-5v5h5v-5zM0 1a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm9 0a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1V1zm1 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1h-5z"
+    />
+  </svg>
+</div>
+<app-products-view [mode]="mode" [products]="products$ | async">
   <div
+    *cardItem="let product"
+    appHover
+    [routerLink]="['details']"
+    [queryParams]="{ key: product.key, bar: 'bar' }"
+  >
+    <app-card [mode]="mode" [product]="product"></app-card>
+  </div>
+  <!-- <div
     class="card mb-3"
     *cardItem="let product"
     appHover
@@ -56,6 +97,9 @@
       />
     </div>
     <div class="card-body">
+      <h5 class="card-title text-truncate">
+        {{ product.name ? product.name : "&nbsp;" }}
+      </h5>
       <div class="d-flex flex-wrap mb-3">
         <span
           *ngFor="let size of getSizes(product.size)"
@@ -69,5 +113,5 @@
         {{ product.price | currency: "RUB":"symbol-narrow":"1.0-2" }}
       </div>
     </div>
-  </div>
+  </div> -->
 </app-products-view>

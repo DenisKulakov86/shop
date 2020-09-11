@@ -42,7 +42,7 @@ import { ProductsState } from 'src/app/store/state/products.state';
 export class ProductDetailsComponent implements OnInit {
   product: Product;
   form: FormGroup;
-  isShowWarning = false;
+  // isShowWarning = false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private store: Store,
@@ -60,8 +60,20 @@ export class ProductDetailsComponent implements OnInit {
     this.product = this.store.selectSnapshot(ProductsState.productItem(key));
     this.form = this.fb.group(
       {
-        num: [1, [Validators.required, Validators.min(1)]],
-        size: ['', [Validators.required]],
+        num: [
+          1,
+          {
+            validators: [Validators.required, Validators.min(1)],
+            // updateOn: 'submit',
+          },
+        ],
+        size: [
+          '',
+          {
+            validators: [Validators.required],
+            // updateOn: 'submit',
+          },
+        ],
       },
       {
         validators: this.validatorNum.bind(this),
@@ -70,7 +82,7 @@ export class ProductDetailsComponent implements OnInit {
 
     this.form.valueChanges.subscribe((v) => {
       console.log(v);
-      this.isShowWarning = false;
+      // this.isShowWarning = false;
     });
     this.form.statusChanges.subscribe((v) => {
       console.log(this.form.errors);
@@ -78,13 +90,6 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
-  getError() {
-    if (!this.form.errors) return;
-    return Object.entries(this.form.errors).reduce(
-      (acc, [k, v]) => (acc += ' ' + v),
-      ''
-    );
-  }
   validatorNum(cntrl: FormGroup) {
     const size = Number(cntrl.get('size').value);
     const num = cntrl.get('num').value;
@@ -96,6 +101,7 @@ export class ProductDetailsComponent implements OnInit {
   }
   submit(value) {
     console.log(this.form.get('num').errors, this.form.errors);
+    this.form.markAsTouched();
     if (this.form.errors && this.form.errors['maxNum']) {
       const invalidControl = this.el.nativeElement.querySelector(
         `[formcontrolname="num"]`
@@ -112,7 +118,7 @@ export class ProductDetailsComponent implements OnInit {
         }
       }
     }
-    this.isShowWarning = true;
+    // this.isShowWarning = true;
 
     this.form.valid && console.log(value);
   }

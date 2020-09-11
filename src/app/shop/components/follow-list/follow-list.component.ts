@@ -3,6 +3,8 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   ViewEncapsulation,
+  AfterContentInit,
+  SimpleChanges,
 } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
 import { Select, Store, Selector } from '@ngxs/store';
@@ -11,6 +13,7 @@ import { ProductsState } from 'src/app/store/state/products.state';
 import { FollowState } from 'src/app/store/state/follow.state';
 import { map } from 'rxjs/operators';
 import { DeleteFollow } from 'src/app/store/action/follow.action';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-follow-list',
@@ -23,6 +26,8 @@ export class FollowListComponent implements OnInit {
   @Select(ProductsState.products) products$: Observable<Product[]>;
   @Select(FollowState.follows) follows$: Observable<string[]>;
   followProducts$: Observable<Product[]>;
+  sizeCtrl: FormControl = new FormControl('');
+  sizes = [];
   constructor(private store: Store) {}
 
   ngOnInit(): void {
@@ -32,5 +37,14 @@ export class FollowListComponent implements OnInit {
   }
   deleteFollow(key) {
     this.store.dispatch(new DeleteFollow(key));
+  }
+  getSizes(sizes) {
+    return Object.entries(sizes).map(([s, c]) => ({
+      value: s,
+      muted: !c,
+    }));
+  }
+  toBasket(value) {
+    console.log(value);
   }
 }

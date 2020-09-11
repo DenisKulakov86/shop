@@ -19,25 +19,14 @@ import { animHover } from 'src/app/animations/animate';
 export class ShopViewComponent implements OnInit {
   @Select(ProductsState.products) products$: Observable<Product[]>;
   images$: Observable<string[]>;
+  mode: 'card' | 'list' = 'card';
 
   constructor(private store: Store) {}
   ngOnInit(): void {
     this.images$ = this.products$.pipe(map((ap) => ap.map((p) => p.img)));
   }
-  getSizes(sizes) {
-    return Object.entries(sizes).map(([s, c]) => ({
-      value: s,
-      muted: !c,
-    }));
-  }
 
-  toggleFollow(ev: Event, key) {
-    ev.stopPropagation();
-    if (~this.store.selectSnapshot(FollowState.follows).indexOf(key))
-      this.store.dispatch(new DeleteFollow(key));
-    else this.store.dispatch(new AddFollow(key));
-  }
-  isFollow(key) {
-    return this.store.selectSnapshot(FollowState.follows).indexOf(key) > -1;
+  toggleView() {
+    this.mode = this.mode === 'card' ? 'list' : 'card';
   }
 }

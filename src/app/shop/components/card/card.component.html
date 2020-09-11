@@ -1,0 +1,47 @@
+<div class="card mb-3" [class.card-list]="mode === 'list'">
+  <div class="card-img-top overflow-hidden">
+    <button
+      [class.active]="isFollow(product.key)"
+      class="btn-follow rounded-circle border-0 bg-white p-1 text-center"
+      (click)="toggleFollow($event, product.key)"
+      type="button"
+    >
+      <svg
+        width="1.5rem"
+        height="1.5rem"
+        viewBox="-2 -2 19 19"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          stroke="#343a40"
+          stroke-width="1.5"
+          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
+        />
+      </svg>
+    </button>
+    <img
+      ondragstart="return false;"
+      src="{{ product.img }}"
+      alt="img product"
+    />
+  </div>
+  <div class="card-body">
+    <h5 class="card-title text-truncate">
+      {{ product.name ? product.name : "&nbsp;" }}
+    </h5>
+    <div class="d-flex flex-wrap mb-3 badges">
+      <span
+        *ngFor="let size of getSizes(product.size)"
+        class="badge font-weight-light"
+        [class.text-muted]="size.muted"
+        >{{ size.value }}</span
+      >
+    </div>
+    <div class="category mb-1">{{ product.category }}</div>
+    <div class="font-weight-bold price text-secondary">
+      {{ product.price | currency: "RUB":"symbol-narrow":"1.0-2" }}
+    </div>
+  </div>
+</div>

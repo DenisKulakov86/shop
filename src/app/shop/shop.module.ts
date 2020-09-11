@@ -13,6 +13,7 @@ import { FollowListComponent } from './components/follow-list/follow-list.compon
 import { HeaderComponent } from './components/header/header.component';
 import { ShopViewComponent } from './components/shop-view/shop-view.component';
 import { BasketComponent } from './components/basket/basket.component';
+import { CardComponent } from './components/card/card.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { BasketComponent } from './components/basket/basket.component';
     ShopViewComponent,
     BasketComponent,
     CardIconDirective,
-    CardItemDirective
+    CardItemDirective,
+    CardComponent
   ],
   imports: [
     ShopRoutingModule,
