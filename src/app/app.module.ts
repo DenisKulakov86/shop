@@ -24,7 +24,7 @@ import {
 import { ProductsState } from './store/state/products.state';
 import { FollowState } from './store/state/follow.state';
 function platformInitialized() {
-  console.log('PLATFORM_INITIALIZER', arguments, [].slice.call(arguments));
+  console.log('PLATFORM_INITIALIZER', arguments, [].slice.apply(arguments));
   return () => {};
 }
 

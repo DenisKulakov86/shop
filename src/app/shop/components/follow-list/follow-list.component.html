@@ -1,10 +1,10 @@
 <h1 class="text-center title p-3 mb-3 mx-n3 mx-xl-0">Избранное</h1>
 <!-- [queryParams]="{ key: product.key, bar: 'bar' }" -->
 <!-- [routerLink]="['/shop/details']" -->
-<app-products-view [products]="followProducts$ | async">
+<app-products-view *ngIf="followProducts$ | async as  followProducts" [products]="followProducts">
   <div
     class="card mb-3 border-0 rounded-0"
-    *cardItem="let product; let i = index"
+    *cardItem="let product =  $implicit; let i = index"
   >
     <div class="card-img">
       <button
@@ -57,11 +57,11 @@
             <select
               id="size{{ i }}"
               class="form-control"
-              [formControl]="sizeCtrl"
+			  [formControl]="sizeCtrls[i]"
             >
               <option
                 *ngFor="let size of getSizes(product.size); first as isFirst"
-                [selected]="sizeCtrl.value == size.value"
+                [selected]="sizeCtrls[i].value == size.value" 
               >
                 {{ size.value }}
               </option>
@@ -69,7 +69,7 @@
           </div>
           <button
             class="btn btn-success w-100"
-            (click)="toBasket(sizeCtrl.value)"
+            (click)="toBasket(sizeCtrls[i].value)"
           >
             В КОРЗИНУ
           </button>
